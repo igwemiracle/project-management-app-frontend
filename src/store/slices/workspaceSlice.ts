@@ -1,6 +1,16 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { api } from '../../services/api';
-import { Workspace } from '../../types';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import { axiosInstance } from "../../services/axiosConfig";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+
+interface Workspace {
+  _id: string;
+  name: string;
+  description?: string;
+  members: any[];
+  createdAt: string;
+}
 
 interface WorkspaceState {
   workspaces: Workspace[];
@@ -16,64 +26,60 @@ const initialState: WorkspaceState = {
   error: null,
 };
 
-export const fetchWorkspaces = createAsyncThunk('workspaces/fetchAll', async () => {
-  const response = await api.workspaces.getAll();
-  return response;
-});
-
-export const createWorkspace = createAsyncThunk(
-  'workspaces/create',
-  async (data: { name: string; description?: string }) => {
-    const response = await api.workspaces.create(data);
-    return response;
+// ✅ Fetch all workspaces
+export const fetchWorkspaces = createAsyncThunk<Workspace[]>(
+  "workspaces/fetchAll",
+  async (_, { rejectWithValue }) => {
+    try {
+      // 👇 Explicitly type the Axios response
+      // 👇 Type the expected structure of your backend response
+      const response = await axiosInstance.get<{ workspaces: Workspace[] }>("/workspaces");
+      return response.data.workspaces; // ✅ No more "unknown"
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
   }
 );
 
-export const fetchWorkspace = createAsyncThunk('workspaces/fetchOne', async (id: string) => {
-  const response = await api.workspaces.getById(id);
-  return response;
-});
+// ✅ Create a new workspace
+export const createWorkspace = createAsyncThunk<
+  Workspace,
+  { name: string; description?: string }
+>(
+  "workspaces/create",
+  async (data, { rejectWithValue }) => {
+    try {
+      // 👇 Explicitly type this response too
+      const response = await axios.post<{ workspace?: Workspace } | Workspace>(
+        `${API_BASE_URL}/workspaces`,
+        data,
+        { withCredentials: true }
+      );
 
-export const updateWorkspace = createAsyncThunk(
-  'workspaces/update',
-  async ({ id, data }: { id: string; data: Partial<{ name: string; description: string }> }) => {
-    const response = await api.workspaces.update(id, data);
-    return response;
+      // ✅ Handle both shapes
+      return response.data && "workspace" in response.data
+        ? response.data.workspace!
+        : (response.data as Workspace);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
   }
 );
-
-export const deleteWorkspace = createAsyncThunk('workspaces/delete', async (id: string) => {
-  await api.workspaces.delete(id);
-  return id;
-});
 
 const workspaceSlice = createSlice({
-  name: 'workspaces',
+  name: "workspaces",
   initialState,
   reducers: {
-    setCurrentWorkspace: (state, action: PayloadAction<Workspace | null>) => {
+    setCurrentWorkspace: (state, action: PayloadAction<Workspace>) => {
       state.currentWorkspace = action.payload;
-    },
-    workspaceUpdatedRealtime: (state, action: PayloadAction<Workspace>) => {
-      const index = state.workspaces.findIndex((w) => w._id === action.payload._id);
-      if (index !== -1) {
-        state.workspaces[index] = action.payload;
-      }
-      if (state.currentWorkspace?._id === action.payload._id) {
-        state.currentWorkspace = action.payload;
-      }
-    },
-    workspaceDeletedRealtime: (state, action: PayloadAction<string>) => {
-      state.workspaces = state.workspaces.filter((w) => w._id !== action.payload);
-      if (state.currentWorkspace?._id === action.payload) {
-        state.currentWorkspace = null;
-      }
     },
   },
   extraReducers: (builder) => {
     builder
+      // ✅ FETCH WORKSPACES
       .addCase(fetchWorkspaces.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchWorkspaces.fulfilled, (state, action: PayloadAction<Workspace[]>) => {
         state.loading = false;
@@ -81,31 +87,27 @@ const workspaceSlice = createSlice({
       })
       .addCase(fetchWorkspaces.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch workspaces';
+        state.error = action.payload as string;
+      })
+
+      // ✅ CREATE WORKSPACE
+      .addCase(createWorkspace.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
       .addCase(createWorkspace.fulfilled, (state, action: PayloadAction<Workspace>) => {
-        state.workspaces.push(action.payload);
-      })
-      .addCase(fetchWorkspace.fulfilled, (state, action: PayloadAction<Workspace>) => {
-        state.currentWorkspace = action.payload;
-      })
-      .addCase(updateWorkspace.fulfilled, (state, action: PayloadAction<Workspace>) => {
-        const index = state.workspaces.findIndex((w) => w._id === action.payload._id);
-        if (index !== -1) {
-          state.workspaces[index] = action.payload;
-        }
-        if (state.currentWorkspace?._id === action.payload._id) {
-          state.currentWorkspace = action.payload;
+        state.loading = false;
+        if (action.payload && action.payload._id) {
+          state.workspaces.push(action.payload);
         }
       })
-      .addCase(deleteWorkspace.fulfilled, (state, action: PayloadAction<string>) => {
-        state.workspaces = state.workspaces.filter((w) => w._id !== action.payload);
-        if (state.currentWorkspace?._id === action.payload) {
-          state.currentWorkspace = null;
-        }
+      .addCase(createWorkspace.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
+
   },
 });
 
-export const { setCurrentWorkspace, workspaceUpdatedRealtime, workspaceDeletedRealtime } = workspaceSlice.actions;
+export const { setCurrentWorkspace } = workspaceSlice.actions;
 export default workspaceSlice.reducer;

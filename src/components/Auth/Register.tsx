@@ -1,27 +1,39 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { UserPlus, Mail, Lock, User } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { register, clearError } from '../../store/slices/authSlice';
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+import { motion } from "framer-motion";
+import { UserPlus, Mail, Lock, User } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { register, clearError } from "../../store/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
-interface RegisterProps {
-  onSwitchToLogin: () => void;
-}
-
-export const Register = ({ onSwitchToLogin }: RegisterProps) => {
+export const Register = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { loading, error } = useAppSelector((state) => state.auth);
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    fullName: '',
+    username: "",
+    email: "",
+    password: "",
+    fullName: ""
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(clearError());
-    await dispatch(register(formData));
+    const resultAction = await dispatch(register(formData));
+
+    if (register.fulfilled.match(resultAction)) {
+      toast.success(
+        "Account created! Please check your email to verify before logging in."
+      );
+      setFormData({ username: "", email: "", password: "", fullName: "" });
+    } else if (register.rejected.match(resultAction)) {
+      const errorMessage =
+        typeof resultAction.payload === "string"
+          ? resultAction.payload
+          : "Registration failed.";
+      toast.error(errorMessage);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +50,7 @@ export const Register = ({ onSwitchToLogin }: RegisterProps) => {
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200 }}
+          transition={{ type: "spring", stiffness: 200 }}
           className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl"
         >
           <UserPlus className="w-8 h-8 text-white" />
@@ -49,7 +61,9 @@ export const Register = ({ onSwitchToLogin }: RegisterProps) => {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Full Name
+          </label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
@@ -65,7 +79,9 @@ export const Register = ({ onSwitchToLogin }: RegisterProps) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Username</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Username
+          </label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
@@ -81,7 +97,9 @@ export const Register = ({ onSwitchToLogin }: RegisterProps) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Email
+          </label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
@@ -97,7 +115,9 @@ export const Register = ({ onSwitchToLogin }: RegisterProps) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Password
+          </label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
@@ -127,18 +147,18 @@ export const Register = ({ onSwitchToLogin }: RegisterProps) => {
           whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={loading}
-          className="w-full py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="w-full py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 transition"
         >
-          {loading ? 'Creating account...' : 'Create Account'}
+          {loading ? "Creating account..." : "Create Account"}
         </motion.button>
       </form>
 
       <div className="mt-6 text-center">
         <p className="text-gray-600">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <button
-            onClick={onSwitchToLogin}
-            className="text-green-600 hover:text-green-700 font-semibold transition"
+            onClick={() => navigate("/login")}
+            className="text-green-600 hover:text-green-700 font-semibold transition cursor-pointer"
           >
             Sign in
           </button>

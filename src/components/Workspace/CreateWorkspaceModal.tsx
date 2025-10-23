@@ -1,16 +1,19 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 
 interface CreateWorkspaceModalProps {
   onClose: () => void;
   onCreate: (data: { name: string; description?: string }) => void;
 }
 
-export const CreateWorkspaceModal = ({ onClose, onCreate }: CreateWorkspaceModalProps) => {
+export const CreateWorkspaceModal = ({
+  onClose,
+  onCreate
+}: CreateWorkspaceModalProps) => {
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    name: "",
+    description: ""
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -28,7 +31,9 @@ export const CreateWorkspaceModal = ({ onClose, onCreate }: CreateWorkspaceModal
           className="bg-white rounded-xl shadow-2xl w-full max-w-md"
         >
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900">Create Workspace</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Create Workspace
+            </h2>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-lg transition"
@@ -45,7 +50,9 @@ export const CreateWorkspaceModal = ({ onClose, onCreate }: CreateWorkspaceModal
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="My Awesome Workspace"
@@ -58,7 +65,9 @@ export const CreateWorkspaceModal = ({ onClose, onCreate }: CreateWorkspaceModal
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 rows={3}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 placeholder="What's this workspace about?"

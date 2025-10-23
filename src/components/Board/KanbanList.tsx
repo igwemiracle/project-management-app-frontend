@@ -1,8 +1,11 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, MoreVertical } from 'lucide-react';
-import { List, Card } from '../../types';
-import { KanbanCard } from './KanbanCard';
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, MoreVertical } from "lucide-react";
+import { List, Card } from "../../types";
+import { KanbanCard } from "./KanbanCard";
+import { ListActionModal } from "../List/ListActionModal";
+import { useAppSelector } from "../../store/hooks";
+import { COLORS } from "./CreateBoardModal";
 
 interface KanbanListProps {
   list: List;
@@ -11,27 +14,111 @@ interface KanbanListProps {
   onSelectCard: (card: Card) => void;
 }
 
-export const KanbanList = ({ list, cards, onCreateCard, onSelectCard }: KanbanListProps) => {
+const isColorDark = (hexColor?: string) => {
+  if (!hexColor || !hexColor.startsWith("#")) return false;
+  const c = hexColor.substring(1);
+  const fullHex =
+    c.length === 3
+      ? c
+          .split("")
+          .map((ch) => ch + ch)
+          .join("")
+      : c;
+  const rgb = parseInt(fullHex, 16);
+  const r = (rgb >> 16) & 0xff;
+  const g = (rgb >> 8) & 0xff;
+  const b = rgb & 0xff;
+
+  // Use relative luminance formula (WCAG standard)
+  const luminance =
+    0.2126 * (r / 255) ** 2.2 +
+    0.7152 * (g / 255) ** 2.2 +
+    0.0722 * (b / 255) ** 2.2;
+
+  // Adjust threshold — lower value = darker perceived color
+  return luminance < 0.5;
+};
+
+export const KanbanList = ({
+  list,
+  cards,
+  onCreateCard,
+  onSelectCard
+}: KanbanListProps) => {
   const [showNewCard, setShowNewCard] = useState(false);
-  const [newCardTitle, setNewCardTitle] = useState('');
+  const [newCardTitle, setNewCardTitle] = useState("");
+  const [showListActionModal, setShowListActionModal] = useState(false);
+  const [listColor, setListColor] = useState(list.color || "");
+  const isDark = useMemo(() => isColorDark(listColor), [listColor]);
+  const currentColor = COLORS.find((c) => c.value === listColor);
+  const hoverColor = currentColor ? currentColor.hover : "#CBD5E1";
+
+  const { loading, error } = useAppSelector((state) => state.auth);
+  const API_BASE_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+  const handleListColorChange = async (color: string) => {
+    try {
+      setListColor(color);
+      // ✅ Persist color to backend
+      const response = await fetch(`${API_BASE_URL}/lists/${list._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ color })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed with status ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("❌ Failed to update list color:", error);
+    }
+  };
 
   const handleCreateCard = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCardTitle.trim()) return;
     onCreateCard(list._id, newCardTitle);
-    setNewCardTitle('');
+    setNewCardTitle("");
     setShowNewCard(false);
   };
 
   return (
-    <div className="flex-shrink-0 w-80">
-      <div className="bg-slate-100 rounded-lg">
+    <div className="flex-shrink-0 w-80 mx-auto">
+      <div
+        style={{ backgroundColor: listColor || "#E2E8F0" }}
+        className="rounded-lg relative transition-colors duration-200"
+      >
         <div className="flex items-center justify-between p-4 border-b border-slate-200">
-          <h3 className="font-semibold text-gray-900">{list.name}</h3>
+          <h3
+            className={`font-semibold ${
+              isDark ? "text-white" : "text-gray-600"
+            }`}
+          >
+            {list.title}
+          </h3>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">{cards.length}</span>
-            <button className="p-1 hover:bg-slate-200 rounded transition">
-              <MoreVertical className="w-4 h-4 text-gray-600" />
+            <span
+              className={`text-sm ${
+                isDark ? "text-gray-100" : "text-gray-500"
+              }`}
+            >
+              {cards.length}
+            </span>
+            <button
+              onClick={() => setShowListActionModal(true)}
+              className={` p-1 rounded transition ${
+                isDark ? "hover:bg-slate-200" : ""
+              }`}
+            >
+              <MoreVertical
+                className={`w-4 h-4${
+                  isDark ? "hover:text-gray-600 text-white " : "text-gray-600"
+                }`}
+              />
             </button>
           </div>
         </div>
@@ -41,7 +128,11 @@ export const KanbanList = ({ list, cards, onCreateCard, onSelectCard }: KanbanLi
             {cards
               .sort((a, b) => a.position - b.position)
               .map((card) => (
-                <KanbanCard key={card._id} card={card} onClick={() => onSelectCard(card)} />
+                <KanbanCard
+                  key={card._id}
+                  card={card}
+                  onClick={() => onSelectCard(card)}
+                />
               ))}
           </AnimatePresence>
 
@@ -64,6 +155,7 @@ export const KanbanList = ({ list, cards, onCreateCard, onSelectCard }: KanbanLi
               <div className="flex gap-2">
                 <button
                   type="submit"
+                  disabled={loading}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
                 >
                   Add Card
@@ -72,7 +164,7 @@ export const KanbanList = ({ list, cards, onCreateCard, onSelectCard }: KanbanLi
                   type="button"
                   onClick={() => {
                     setShowNewCard(false);
-                    setNewCardTitle('');
+                    setNewCardTitle("");
                   }}
                   className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm"
                 >
@@ -85,13 +177,35 @@ export const KanbanList = ({ list, cards, onCreateCard, onSelectCard }: KanbanLi
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setShowNewCard(true)}
-              className="w-full p-2 text-left text-gray-600 hover:bg-slate-200 rounded-lg transition flex items-center gap-2 text-sm"
+              className={`w-full p-2 text-left flex items-center gap-2 text-sm rounded-lg transition-colors duration-200 ${
+                isDark ? "text-white" : "text-gray-600"
+              }`}
+              style={{
+                backgroundColor: "transparent"
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                  hoverColor;
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                  "transparent";
+              }}
             >
               <Plus className="w-4 h-4" />
               Add a card
             </motion.button>
           )}
         </div>
+
+        {/* List Action Modal */}
+        {showListActionModal && (
+          <ListActionModal
+            list={list}
+            onListActionClose={() => setShowListActionModal(false)}
+            onColorChange={handleListColorChange}
+          />
+        )}
       </div>
     </div>
   );

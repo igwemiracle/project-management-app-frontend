@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+button {
+  cursor: pointer;
+}
+a {
+  cursor: pointer;
+}
+
 @layer utilities {
   .animation-delay-2000 {
     animation-delay: 2s;

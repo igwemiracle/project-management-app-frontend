@@ -1,61 +1,90 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Plus, MoreVertical, Users as UsersIcon } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchBoardData, createList, createCard } from '../../store/slices/boardSlice';
-import { KanbanList } from './KanbanList';
-import { CardDetailModal } from './CardDetailModal';
-import { Card } from '../../types';
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  ArrowLeft,
+  Plus,
+  MoreVertical,
+  Users as UsersIcon
+} from "lucide-react";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  fetchBoardData,
+  createList,
+  createCard
+} from "../../store/slices/boardSlice";
+import { KanbanList } from "./KanbanList";
+import { CardDetailModal } from "./CardDetailModal";
+import { Card } from "../../types";
+import { useNavigate, useParams } from "react-router-dom";
 
-interface KanbanBoardProps {
-  boardId: string;
-  onBack: () => void;
-}
-
-export const KanbanBoard = ({ boardId, onBack }: KanbanBoardProps) => {
+export const KanbanBoard = () => {
   const dispatch = useAppDispatch();
-  const { currentBoard, lists, cards, loading } = useAppSelector((state) => state.boards);
+  const navigate = useNavigate();
+  const { boardId } = useParams<{ boardId: string }>();
+
+  const { currentBoard, lists, cards, loading } = useAppSelector(
+    (state) => state.boards
+  );
   const { onlineUsers } = useAppSelector((state) => state.realtime);
-  const [newListName, setNewListName] = useState('');
+
+  const [newListName, setNewListName] = useState("");
   const [showNewList, setShowNewList] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
+  // ✅ Go back to previous page
+  const handleOnBack = () => {
+    navigate(-1);
+  };
+
+  // ✅ Fetch board data if boardId exists
   useEffect(() => {
-    dispatch(fetchBoardData(boardId));
+    if (boardId) {
+      dispatch(fetchBoardData(boardId));
+    }
   }, [dispatch, boardId]);
 
+  // ✅ Create new list safely
   const handleCreateList = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newListName.trim()) return;
+    if (!newListName.trim() || !boardId) return;
 
     await dispatch(
       createList({
-        name: newListName,
+        title: newListName,
         board: boardId,
-        position: lists.length,
+        position: lists.length
       })
     );
-    setNewListName('');
+
+    setNewListName("");
     setShowNewList(false);
   };
 
+  // ✅ Create new card safely
   const handleCreateCard = async (listId: string, title: string) => {
+    if (!boardId) return;
+
     const listCards = cards.filter((c) => c.list === listId);
     await dispatch(
       createCard({
         title,
-        list: listId,
+        listId,
         board: boardId,
         position: listCards.length,
         assignedTo: [],
         labels: [],
         attachments: [],
+        dueDate: null
       })
     );
   };
 
-  const boardOnlineUsers = onlineUsers.filter((u) => u.boardId === boardId);
+  // ✅ Safely filter users for this board
+  const boardOnlineUsers = boardId
+    ? onlineUsers.filter((u) => u.boardId === boardId)
+    : [];
 
+  // ✅ Show loader when data is being fetched
   if (loading && !currentBoard) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -70,15 +99,19 @@ export const KanbanBoard = ({ boardId, onBack }: KanbanBoardProps) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
-              onClick={onBack}
+              onClick={handleOnBack}
               className="p-2 hover:bg-gray-100 rounded-lg transition"
             >
               <ArrowLeft className="w-6 h-6 text-gray-700" />
             </button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{currentBoard?.name}</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {currentBoard?.title}
+              </h1>
               {currentBoard?.description && (
-                <p className="text-sm text-gray-600">{currentBoard.description}</p>
+                <p className="text-sm text-gray-600">
+                  {currentBoard.description}
+                </p>
               )}
             </div>
           </div>
@@ -101,7 +134,9 @@ export const KanbanBoard = ({ boardId, onBack }: KanbanBoardProps) => {
             <KanbanList
               key={list._id}
               list={list}
-              cards={cards.filter((c) => c.list === list._id)}
+              cards={cards.filter(
+                (c) => c && c.list && c.list.toString() === list._id.toString()
+              )}
               onCreateCard={handleCreateCard}
               onSelectCard={setSelectedCard}
             />
@@ -126,6 +161,7 @@ export const KanbanBoard = ({ boardId, onBack }: KanbanBoardProps) => {
                 <div className="flex gap-2">
                   <button
                     type="submit"
+                    disabled={loading}
                     className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
                   >
                     Add List
@@ -134,7 +170,7 @@ export const KanbanBoard = ({ boardId, onBack }: KanbanBoardProps) => {
                     type="button"
                     onClick={() => {
                       setShowNewList(false);
-                      setNewListName('');
+                      setNewListName("");
                     }}
                     className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
                   >
@@ -158,7 +194,10 @@ export const KanbanBoard = ({ boardId, onBack }: KanbanBoardProps) => {
       </div>
 
       {selectedCard && (
-        <CardDetailModal card={selectedCard} onClose={() => setSelectedCard(null)} />
+        <CardDetailModal
+          card={selectedCard}
+          onClose={() => setSelectedCard(null)}
+        />
       )}
     </div>
   );

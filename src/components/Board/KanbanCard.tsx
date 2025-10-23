@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
-import { Calendar, MessageSquare, Paperclip } from 'lucide-react';
-import { Card } from '../../types';
+import { motion } from "framer-motion";
+import { Calendar, MessageSquare, Paperclip } from "lucide-react";
+import { Card } from "../../types";
 
 interface KanbanCardProps {
   card: Card;
@@ -9,7 +9,15 @@ interface KanbanCardProps {
 
 export const KanbanCard = ({ card, onClick }: KanbanCardProps) => {
   const hasDetails =
-    card.description || card.dueDate || card.assignedTo.length > 0 || card.attachments.length > 0;
+    card.description ||
+    card.dueDate ||
+    (card.assignedTo?.length ?? 0) > 0 ||
+    (card.attachments?.length ?? 0) > 0;
+  // const hasDetails =
+  //   card.description ||
+  //   card.dueDate ||
+  //   card.assignedTo.length > 0 ||
+  //   card.attachments.length > 0;
 
   return (
     <motion.div
@@ -19,9 +27,9 @@ export const KanbanCard = ({ card, onClick }: KanbanCardProps) => {
       exit={{ opacity: 0, y: -10 }}
       whileHover={{ scale: 1.02 }}
       onClick={onClick}
-      className="bg-white rounded-lg shadow-sm hover:shadow-md transition cursor-pointer p-3"
+      className="rounded-lg shadow-sm hover:shadow-md transition cursor-pointer p-3 bg-white"
     >
-      <h4 className="font-medium text-gray-900 mb-2">{card.title}</h4>
+      <h4 className="font-medium text-gray-600 mb-2">{card.title}</h4>
 
       {card.labels && card.labels.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-2">
@@ -41,10 +49,12 @@ export const KanbanCard = ({ card, onClick }: KanbanCardProps) => {
           {card.dueDate && (
             <div className="flex items-center gap-1">
               <Calendar className="w-4 h-4" />
-              <span className="text-xs">{new Date(card.dueDate).toLocaleDateString()}</span>
+              <span className="text-xs">
+                {new Date(card.dueDate).toLocaleDateString()}
+              </span>
             </div>
           )}
-          {card.attachments.length > 0 && (
+          {(card.attachments?.length ?? 0) > 0 && (
             <div className="flex items-center gap-1">
               <Paperclip className="w-4 h-4" />
               <span className="text-xs">{card.attachments.length}</span>
@@ -53,7 +63,7 @@ export const KanbanCard = ({ card, onClick }: KanbanCardProps) => {
         </div>
       )}
 
-      {card.assignedTo && card.assignedTo.length > 0 && (
+      {(card.assignedTo?.length ?? 0) > 0 && (
         <div className="flex -space-x-2 mt-2">
           {card.assignedTo.slice(0, 3).map((userId, index) => (
             <div

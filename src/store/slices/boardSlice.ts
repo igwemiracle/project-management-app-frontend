@@ -11,6 +11,18 @@ interface BoardState {
   error: string | null;
 }
 
+interface CreateCardPayload {
+  title: string;
+  description?: string;
+  listId: string;
+  board: string;
+  position?: number;
+  assignedTo?: string[];
+  labels?: string[];
+  attachments?: string[];
+  dueDate?: string | null;
+}
+
 const initialState: BoardState = {
   boards: [],
   currentBoard: null,
@@ -20,16 +32,30 @@ const initialState: BoardState = {
   error: null,
 };
 
-export const fetchBoards = createAsyncThunk('boards/fetchAll', async (workspaceId: string) => {
-  const response = await api.boards.getAll(workspaceId);
-  return response;
-});
+export const fetchBoards = createAsyncThunk<Board[], string>(
+  'boards/fetchAll',
+  async (workspaceId, { rejectWithValue }) => {
+    try {
+      const response = await api.boards.getAll(workspaceId);
+      return response.boards;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
 
 export const createBoard = createAsyncThunk(
-  'boards/create',
-  async (data: { name: string; workspace: string; description?: string; color?: string }) => {
-    const response = await api.boards.create(data);
-    return response;
+  "boards/create",
+  async (
+    data: { title: string; workspaceId: string; description?: string; color?: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await api.boards.create(data);
+      return response.board;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
   }
 );
 
@@ -38,20 +64,44 @@ export const fetchBoard = createAsyncThunk('boards/fetchOne', async (id: string)
   return response;
 });
 
-export const fetchBoardData = createAsyncThunk('boards/fetchBoardData', async (boardId: string) => {
-  const [board, lists, cards] = await Promise.all([
-    api.boards.getById(boardId),
-    api.lists.getAll(boardId),
-    api.cards.getAll(boardId),
-  ]);
-  return { board, lists, cards };
-});
+export const fetchBoardData = createAsyncThunk<
+  { board: Board; lists: List[]; cards: Card[] },
+  string
+>(
+  "boards/fetchBoardData",
+  async (boardId, { rejectWithValue }) => {
+    try {
+      const [board, listsResponse, cardsResponse] = await Promise.all([
+        api.boards.getById(boardId),
+        api.lists.getAll(boardId),
+        api.cards.getAll(boardId),
+      ]);
 
-export const createList = createAsyncThunk(
-  'boards/createList',
-  async (data: { name: string; board: string; position: number }) => {
-    const response = await api.lists.create(data);
-    return response;
+      return {
+        board,
+        lists: listsResponse.lists,
+        cards: cardsResponse.cards,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+
+export const createList = createAsyncThunk<List, { title: string; board: string; position?: number }>(
+  "boards/createList",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await api.lists.create({
+        title: data.title,
+        boardId: data.board,
+        position: data.position,
+      });
+      return response.list;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
   }
 );
 
@@ -68,10 +118,14 @@ export const deleteList = createAsyncThunk('boards/deleteList', async (id: strin
   return id;
 });
 
-export const createCard = createAsyncThunk('boards/createCard', async (data: any) => {
-  const response = await api.cards.create(data);
-  return response;
-});
+
+export const createCard = createAsyncThunk<Card, CreateCardPayload>(
+  "boards/createCard",
+  async (data) => {
+    const response = await api.cards.create(data);
+    return response.card;
+  }
+);
 
 export const updateCard = createAsyncThunk(
   'boards/updateCard',
@@ -165,9 +219,15 @@ const boardSlice = createSlice({
       })
       .addCase(fetchBoardData.fulfilled, (state, action) => {
         state.currentBoard = action.payload.board;
-        state.lists = action.payload.lists.sort((a: List, b: List) => a.position - b.position);
-        state.cards = action.payload.cards.sort((a: Card, b: Card) => a.position - b.position);
+        state.lists = Array.isArray(action.payload.lists)
+          ? action.payload.lists.sort((a: List, b: List) => (a.position || 0) - (b.position || 0))
+          : [];
+        state.cards = Array.isArray(action.payload.cards)
+          ? action.payload.cards.sort((a: Card, b: Card) => (a.position || 0) - (b.position || 0))
+          : [];
+        state.loading = false;
       })
+
       .addCase(createList.fulfilled, (state, action: PayloadAction<List>) => {
         state.lists.push(action.payload);
       })

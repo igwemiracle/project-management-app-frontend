@@ -10,13 +10,33 @@ export interface User {
 
 export interface Workspace {
   _id: string;
-  name: string;
-  description?: string;
-  owner: string;
-  members: WorkspaceMember[];
+  title: string;
+  description: string;
+  createdBy: string;
+  members: Array<{
+    user: {
+      _id: string;
+      name: string;
+      email: string;
+    };
+    role: string;
+    _id: string;
+  }>;
+  boards: Array<{
+    _id: string;
+    title: string;
+    description: string;
+    createdBy: string;
+    lists: string[];
+    workspace: string;
+    createdAt: string;
+    updatedAt: string;
+  }>;
+  isPrivate: boolean;
   createdAt: string;
   updatedAt: string;
 }
+
 
 export interface WorkspaceMember {
   user: string;
@@ -26,7 +46,7 @@ export interface WorkspaceMember {
 
 export interface Board {
   _id: string;
-  name: string;
+  title: string;
   description?: string;
   workspace: string;
   color?: string;
@@ -37,9 +57,10 @@ export interface Board {
 
 export interface List {
   _id: string;
-  name: string;
+  title: string;
   board: string;
-  position: number;
+  color: string;
+  position?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -59,7 +80,6 @@ export interface Card {
   createdAt: string;
   updatedAt: string;
 }
-
 export interface Comment {
   _id: string;
   content: string;
