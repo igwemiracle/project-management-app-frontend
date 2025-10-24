@@ -19,7 +19,7 @@ export const BoardList = () => {
   };
 
   const handleOnBack = () => {
-    navigate("/workspaces");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -31,23 +31,23 @@ export const BoardList = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+        <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen p-8 bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="mx-auto max-w-7xl">
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={handleOnBack}
-            className="p-2 hover:bg-white rounded-lg transition"
+            className="p-2 transition rounded-lg hover:bg-white"
           >
             <ArrowLeft className="w-6 h-6 text-gray-700" />
           </button>
           <div className="flex-1">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            <h1 className="mb-2 text-4xl font-bold text-gray-900">
               {currentWorkspace?.name}
             </h1>
             <p className="text-gray-600">Manage your boards and projects</p>
@@ -56,7 +56,7 @@ export const BoardList = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => openModal("board", { workspaceId })}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            className="flex items-center gap-2 px-6 py-3 text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
           >
             <Plus className="w-5 h-5" />
             New Board
@@ -67,24 +67,24 @@ export const BoardList = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-16"
+            className="py-16 text-center"
           >
-            <Layout className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+            <Layout className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+            <h3 className="mb-2 text-xl font-semibold text-gray-700">
               No boards yet
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="mb-6 text-gray-500">
               Create your first board to start organizing tasks
             </p>
             <button
               onClick={() => openModal("board", { workspaceId })}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              className="px-6 py-3 text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
             >
               Create Board
             </button>
           </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {boards.map((board, index) => {
               return (
                 <motion.div
@@ -94,10 +94,10 @@ export const BoardList = () => {
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -8, transition: { duration: 0.2 } }}
                   onClick={() => handleOnSelectBoard(board._id)}
-                  className="relative bg-white rounded-xl shadow-sm hover:shadow-xl transition cursor-pointer overflow-hidden"
+                  className="relative overflow-hidden transition bg-white shadow-sm cursor-pointer rounded-xl hover:shadow-xl"
                 >
                   <div
-                    className="h-32 p-6 flex items-end"
+                    className="flex items-end h-32 p-6"
                     style={{
                       background: `linear-gradient(135deg, ${
                         board.color || "#3B82F6"
@@ -110,8 +110,8 @@ export const BoardList = () => {
                   </div>
 
                   <div className="p-4">
-                    <p className="text-gray-600 text-sm line-clamp-2">
-                      {board.description || "No description"}
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {board.description}
                     </p>
                   </div>
 

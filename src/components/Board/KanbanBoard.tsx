@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  ArrowLeft,
-  Plus,
-  MoreVertical,
-  Users as UsersIcon
-} from "lucide-react";
+import { ArrowLeft, Plus, Users as UsersIcon } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   fetchBoardData,
@@ -22,8 +17,11 @@ export const KanbanBoard = () => {
   const navigate = useNavigate();
   const { boardId } = useParams<{ boardId: string }>();
 
-  const { currentBoard, lists, cards, loading } = useAppSelector(
+  const { currentBoard, boards, lists, cards, loading } = useAppSelector(
     (state) => state.boards
+  );
+  const activeBoard = boards?.find(
+    (b) => b._id?.toString() === boardId?.toString()
   );
   const { onlineUsers } = useAppSelector((state) => state.realtime);
 
@@ -88,36 +86,37 @@ export const KanbanBoard = () => {
   if (loading && !currentBoard) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+        <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-100 to-slate-200">
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-100 to-slate-200">
+      <div className="px-6 py-4 bg-white border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
               onClick={handleOnBack}
-              className="p-2 hover:bg-gray-100 rounded-lg transition"
+              className="p-2 transition rounded-lg hover:bg-gray-100"
             >
               <ArrowLeft className="w-6 h-6 text-gray-700" />
             </button>
+
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                {currentBoard?.title}
+                <h2>{activeBoard?.title}</h2>
               </h1>
               {currentBoard?.description && (
                 <p className="text-sm text-gray-600">
-                  {currentBoard.description}
+                  {activeBoard?.description}
                 </p>
               )}
             </div>
           </div>
           <div className="flex items-center gap-4">
             {boardOnlineUsers.length > 0 && (
-              <div className="flex items-center gap-2 px-4 py-2 bg-green-50 rounded-lg">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50">
                 <UsersIcon className="w-4 h-4 text-green-600" />
                 <span className="text-sm font-medium text-green-700">
                   {boardOnlineUsers.length} online
@@ -129,7 +128,7 @@ export const KanbanBoard = () => {
       </div>
 
       <div className="flex-1 overflow-x-auto">
-        <div className="inline-flex gap-4 p-6 min-h-full">
+        <div className="inline-flex min-h-full gap-4 p-6">
           {lists.map((list) => (
             <KanbanList
               key={list._id}
@@ -148,7 +147,7 @@ export const KanbanBoard = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 onSubmit={handleCreateList}
-                className="bg-white rounded-lg p-4 shadow-sm"
+                className="p-4 bg-white rounded-lg shadow-sm"
               >
                 <input
                   type="text"
@@ -156,13 +155,13 @@ export const KanbanBoard = () => {
                   onChange={(e) => setNewListName(e.target.value)}
                   placeholder="Enter list name..."
                   autoFocus
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
+                  className="w-full px-3 py-2 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <div className="flex gap-2">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                    className="flex-1 px-4 py-2 text-sm font-medium text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
                   >
                     Add List
                   </button>
@@ -172,7 +171,7 @@ export const KanbanBoard = () => {
                       setShowNewList(false);
                       setNewListName("");
                     }}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                    className="px-4 py-2 text-gray-600 transition rounded-lg hover:bg-gray-100"
                   >
                     Cancel
                   </button>
@@ -183,7 +182,7 @@ export const KanbanBoard = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setShowNewList(true)}
-                className="w-full p-4 bg-white bg-opacity-50 hover:bg-opacity-70 rounded-lg transition flex items-center gap-2 text-gray-700 font-medium"
+                className="flex items-center w-full gap-2 p-4 font-medium text-gray-700 transition bg-white bg-opacity-50 rounded-lg hover:bg-opacity-70"
               >
                 <Plus className="w-5 h-5" />
                 Add another list

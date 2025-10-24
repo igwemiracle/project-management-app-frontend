@@ -21,7 +21,7 @@ export const Login = () => {
 
     try {
       await dispatch(login(formData)).unwrap();
-      navigate("/workspaces");
+      navigate("/");
     } catch (err: any) {
       console.error("Login failed:", err);
     }
@@ -31,21 +31,13 @@ export const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
-      </div>
-    );
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full mx-auto max-w-md p-8 bg-white rounded-2xl shadow-xl"
+      className="w-[448px] mx-auto max-w-md p-8 bg-white rounded-2xl shadow-xl"
     >
-      <div className="text-center mb-8">
+      <div className="mb-8 text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -62,36 +54,36 @@ export const Login = () => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block mb-2 text-sm font-medium text-gray-700">
             Email
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Mail className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="you@example.com"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block mb-2 text-sm font-medium text-gray-700">
             Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Lock className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your password"
             />
           </div>
@@ -101,7 +93,7 @@ export const Login = () => {
           <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"
+            className="p-3 text-sm text-red-700 border border-red-200 rounded-lg bg-red-50"
           >
             {error}
           </motion.div>
@@ -112,7 +104,7 @@ export const Login = () => {
           whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={loading}
-          className="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="w-full py-3 font-semibold text-white transition rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? "Signing in..." : "Sign In"}
         </motion.button>
@@ -123,7 +115,7 @@ export const Login = () => {
           Don't have an account?{" "}
           <button
             onClick={() => navigate("/register")}
-            className="text-blue-600 hover:text-blue-700 font-semibold transition cursor-pointer"
+            className="font-semibold text-blue-600 transition cursor-pointer hover:text-blue-700"
           >
             Sign up
           </button>

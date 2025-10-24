@@ -213,6 +213,7 @@ const boardSlice = createSlice({
       })
       .addCase(createBoard.fulfilled, (state, action: PayloadAction<Board>) => {
         state.boards.push(action.payload);
+        state.currentBoard = action.payload;
       })
       .addCase(fetchBoard.fulfilled, (state, action: PayloadAction<Board>) => {
         state.currentBoard = action.payload;

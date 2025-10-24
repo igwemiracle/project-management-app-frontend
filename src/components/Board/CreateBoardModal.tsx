@@ -42,13 +42,13 @@ export const CreateBoardModal = ({
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
-          className="bg-white rounded-xl shadow-2xl w-full max-w-md"
+          className="w-full max-w-md bg-white shadow-2xl rounded-xl"
         >
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <h2 className="text-2xl font-bold text-gray-900">Create Board</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition"
+              className="p-2 transition rounded-lg hover:bg-gray-100"
             >
               <X className="w-5 h-5" />
             </button>
@@ -56,7 +56,7 @@ export const CreateBoardModal = ({
 
           <form onSubmit={handleSubmit} className="p-6">
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
                 Board Name
               </label>
               <input
@@ -72,7 +72,7 @@ export const CreateBoardModal = ({
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
                 Description (optional)
               </label>
               <textarea
@@ -81,13 +81,13 @@ export const CreateBoardModal = ({
                   setFormData({ ...formData, description: e.target.value })
                 }
                 rows={2}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="What's this board for?"
               />
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block mb-3 text-sm font-medium text-gray-700">
                 Board Color
               </label>
               <div className="grid grid-cols-6 gap-3">
@@ -113,13 +113,13 @@ export const CreateBoardModal = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+                className="flex-1 px-4 py-2 text-gray-700 transition border border-gray-300 rounded-lg hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                className="flex-1 px-4 py-2 text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
               >
                 Create
               </button>

@@ -53,7 +53,7 @@ export const KanbanList = ({
   const currentColor = COLORS.find((c) => c.value === listColor);
   const hoverColor = currentColor ? currentColor.hover : "#CBD5E1";
 
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const { loading } = useAppSelector((state) => state.auth);
   const API_BASE_URL =
     import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 

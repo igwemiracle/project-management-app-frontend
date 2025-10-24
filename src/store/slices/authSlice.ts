@@ -7,6 +7,7 @@ interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  initialized: boolean;
 }
 
 const initialState: AuthState = {
@@ -14,6 +15,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  initialized: false
 };
 
 // ✅ Login
@@ -62,14 +64,14 @@ export const register = createAsyncThunk(
     try {
       const response = await api.auth.register(data);
 
-      // Backend might automatically log in after registration (cookie set)
-      if (response.success || response.user) {
+      // ✅ Return response.user if exists
+      if (response.user) {
         return response;
       }
 
       return rejectWithValue(response.message || "Registration failed");
     } catch (error: any) {
-      return rejectWithValue(error.message || "Registration failed");
+      return rejectWithValue(error.response?.data?.message || error.message || "Registration failed");
     }
   }
 );
@@ -149,11 +151,13 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user || action.payload;
         state.isAuthenticated = true;
+        state.initialized = true; // ✅ finished checking
       })
       .addCase(getProfile.rejected, (state) => {
         state.loading = false;
         state.user = null;
         state.isAuthenticated = false;
+        state.initialized = true; // ✅ even if failed, mark initialized
       })
 
       // LOGOUT USER

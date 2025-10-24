@@ -1,23 +1,33 @@
 import { ChevronLeft, X, ChevronDown } from "lucide-react";
 import FloatingContainer from "../FloatingContainer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useParams } from "react-router-dom";
+import { fetchBoards } from "../../store/slices/boardSlice";
 
 interface CreateBoardFormProps {
   onBack?: () => void;
   onClose?: () => void;
-  // optional: pass workspaces or other data from parent instead of using hardcoded data
-  workspaces?: { id: number; name: string }[];
+  onCreate: (data: {
+    title: string;
+    description?: string;
+    color?: string;
+    workspaceName: string;
+    visibility: string;
+  }) => void;
 }
 
 export default function CreateBoardForm({
   onBack = () => {},
   onClose = () => {},
-  workspaces = [
-    { id: 1, name: "Marketing Team" },
-    { id: 2, name: "Development Hub" },
-    { id: 3, name: "Design Studio" }
-  ]
+  onCreate
 }: CreateBoardFormProps) {
+  const dispatch = useAppDispatch();
+
+  const { boardId } = useParams<{ boardId: string }>();
+  const { workspaceId } = useParams<{ workspaceId: string }>();
+  const { workspaces } = useAppSelector((state) => state.workspaces);
+  const { loading } = useAppSelector((state) => state.boards);
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
   const [showVisibilityDropdown, setShowVisibilityDropdown] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState<string | null>(
@@ -26,15 +36,51 @@ export default function CreateBoardForm({
   const [selectedVisibility, setSelectedVisibility] = useState<string | null>(
     null
   );
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    color: ""
+  });
+
+  // ✅ Fetch board data if boardId exists
+  useEffect(() => {
+    if (boardId) {
+      dispatch(fetchBoards(boardId));
+    }
+  }, [dispatch, boardId]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    onCreate({
+      ...formData,
+      workspaceName: selectedWorkspace || "",
+      visibility: selectedVisibility || ""
+    });
+  };
+
+  useEffect(() => {
+    if (workspaces?.length > 0 && !selectedWorkspace) {
+      setSelectedWorkspace(workspaces[0].name);
+    }
+  }, [workspaces, selectedWorkspace]);
+
+  useEffect(() => {
+    if (workspaceId) {
+      dispatch(fetchBoards(workspaceId));
+    }
+  }, [dispatch, workspaceId]);
+
+  // 🧠 Determine if button should be enabled
+  const isFormValid = formData.title && selectedWorkspace && selectedVisibility;
 
   return (
     <FloatingContainer className="top-0 right-0 w-[320px] text-white bg-[#1D2125] p-4 rounded-lg shadow-lg">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 w-full">
+      <div className="flex items-center justify-between w-full mb-4">
         <ChevronLeft
           className="cursor-pointer hover:text-gray-400"
           onClick={(e) => {
-            e.stopPropagation(); // prevent bubbling to parent handlers
+            e.stopPropagation();
             onBack();
           }}
         />
@@ -50,19 +96,22 @@ export default function CreateBoardForm({
 
       {/* Form */}
       <form
-        className="space-y-5 w-full"
-        onClick={(e) => e.stopPropagation()} // ensure clicks inside don't bubble out
-        onSubmit={(e) => {
-          e.preventDefault();
-          // handle submit here or lift up via a passed callback prop
-        }}
+        onSubmit={handleSubmit}
+        className="w-full space-y-5"
+        // onClick={(e) => e.stopPropagation()}
       >
         {/* Board Name */}
         <div>
-          <label className="block text-sm mb-1 text-gray-300">Board Name</label>
+          <label className="block mb-1 text-sm text-gray-300">
+            Board title
+          </label>
           <input
             type="text"
             required
+            value={formData.title}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             placeholder="My Awesome Board"
             className="w-full bg-[#2C2F33] border border-[#3A3F44] rounded-md px-3 py-2 text-sm text-gray-200 placeholder-gray-400 focus:outline-none focus:border-blue-500"
           />
@@ -70,7 +119,7 @@ export default function CreateBoardForm({
 
         {/* Workspace */}
         <div className="relative">
-          <label className="block text-sm mb-1 text-gray-300">Workspace</label>
+          <label className="block mb-1 text-sm text-gray-300">Workspace</label>
           <div
             className="flex items-center bg-[#2C2F33] border border-[#3A3F44] rounded-md px-3 py-2 cursor-pointer"
             onClick={(e) => {
@@ -78,8 +127,12 @@ export default function CreateBoardForm({
               setShowWorkspaceDropdown((prev) => !prev);
             }}
           >
-            <span className="text-sm text-gray-200 flex-1">
-              {selectedWorkspace || "Select workspace"}
+            <span className="flex-1 text-sm text-gray-200">
+              {selectedWorkspace
+                ? selectedWorkspace
+                : workspaces?.length > 0
+                ? workspaces[0].name
+                : "No workspace found"}
             </span>
             <ChevronDown size={16} className="text-gray-400" />
           </div>
@@ -89,26 +142,33 @@ export default function CreateBoardForm({
               className="absolute top-full left-0 mt-1 w-full bg-[#2C2F33] border border-[#3A3F44] rounded-md shadow-md z-50"
               onClick={(e) => e.stopPropagation()}
             >
-              {workspaces.map((workspace) => (
-                <div
-                  key={workspace.id}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedWorkspace(workspace.name);
-                    setShowWorkspaceDropdown(false);
-                  }}
-                  className="px-3 py-2 text-sm text-gray-200 hover:bg-[#34363a] cursor-pointer"
-                >
-                  {workspace.name}
-                </div>
-              ))}
+              {workspaces.map((workspace) => {
+                const isSelected = selectedWorkspace === workspace.name;
+                return (
+                  <div
+                    key={workspace._id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedWorkspace(workspace.name);
+                      setShowWorkspaceDropdown(false);
+                    }}
+                    className={`px-3 py-2 text-sm text-gray-200 cursor-pointer transition-colors ${
+                      isSelected
+                        ? "bg-blue-600 text-white" // Highlight selected workspace
+                        : "hover:bg-[#34363a]"
+                    }`}
+                  >
+                    {workspace.name}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
 
         {/* Visibility */}
         <div className="relative">
-          <label className="block text-sm mb-1 text-gray-300">Visibility</label>
+          <label className="block mb-1 text-sm text-gray-300">Visibility</label>
           <div
             className="flex items-center bg-[#2C2F33] border border-[#3A3F44] rounded-md px-3 py-2 cursor-pointer"
             onClick={(e) => {
@@ -116,7 +176,7 @@ export default function CreateBoardForm({
               setShowVisibilityDropdown((prev) => !prev);
             }}
           >
-            <span className="text-sm text-gray-200 flex-1">
+            <span className="flex-1 text-sm text-gray-200">
               {selectedVisibility || "Select visibility"}
             </span>
             <ChevronDown size={16} className="text-gray-400" />
@@ -144,11 +204,17 @@ export default function CreateBoardForm({
           )}
         </div>
 
+        {/* Submit button */}
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium py-2 rounded-md transition-colors"
+          disabled={!isFormValid}
+          className={`w-full py-2 text-sm font-medium text-white rounded-md transition-colors ${
+            isFormValid
+              ? "bg-blue-600 hover:bg-blue-500"
+              : "bg-gray-600 cursor-not-allowed"
+          }`}
         >
-          Create Board
+          {loading ? "Creating board..." : "Create board"}
         </button>
       </form>
     </FloatingContainer>

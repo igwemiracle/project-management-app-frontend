@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp, X } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { COLORS } from "../Board/CreateBoardModal";
 
 interface CreateListActionModal {
@@ -9,7 +9,6 @@ interface CreateListActionModal {
 }
 
 export const ListActionModal = ({
-  list,
   onListActionClose,
   onColorChange
 }: CreateListActionModal) => {
@@ -22,34 +21,36 @@ export const ListActionModal = ({
   };
 
   return (
-    <div onClick={onListActionClose} className="">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md absolute top-12 -right-[17.5rem] z-50 py-4 space-y-4">
-        <div className="flex justify-between items-center">
-          <div></div>
-          <h4>List actions</h4>
-          <button className="transition pr-2" onClick={onListActionClose}>
-            <X />
+    <div onClick={onListActionClose} className="inset-0 z-40 bg-transparent">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="absolute top-12 -right-[17.5rem] z-50 w-full max-w-md bg-white rounded-2xl shadow-2xl p-5 space-y-5 text-gray-800 border border-gray-100"
+      >
+        {/* Header */}
+        <div className="flex justify-between items-center border-b pb-3">
+          <h4 className="text-lg font-semibold text-gray-700">List Actions</h4>
+          <button
+            className="hover:bg-gray-100 p-1 rounded-full transition"
+            onClick={onListActionClose}
+          >
+            <X className="w-5 h-5 text-gray-600" />
           </button>
         </div>
 
-        {/* List actions */}
-        <ul className="w-full overflow-auto space-y-1">
-          <li className="block w-full hover:bg-gray-400 cursor-pointer px-4 py-[4px]">
-            Add card
-          </li>
-          <li className="block w-full hover:bg-gray-400 cursor-pointer px-4 py-[4px]">
-            Copy list
-          </li>
-          <li className="block w-full hover:bg-gray-400 cursor-pointer px-4 py-[4px]">
-            Move list
-          </li>
-          <li className="block w-full hover:bg-gray-400 cursor-pointer px-4 py-[4px]">
-            Watch
-          </li>
+        {/* Action List */}
+        <ul className="space-y-1 text-[15px]">
+          {["Add card", "Copy list", "Move list", "Watch"].map((action) => (
+            <li
+              key={action}
+              className="px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-100 transition flex items-center justify-between"
+            >
+              <span>{action}</span>
+            </li>
+          ))}
         </ul>
 
-        {/* Change color list (collapsible section) */}
-        <div className="border-t border-b py-4 space-y-2 mx-auto w-[90%]">
+        {/* Change Color Section */}
+        <div className="border-t border-b py-3 space-y-3">
           <div
             className="flex justify-between items-center cursor-pointer"
             onClick={(e) => {
@@ -57,28 +58,34 @@ export const ListActionModal = ({
               setIsColorSectionOpen(!isColorSectionOpen);
             }}
           >
-            <p className="text-[12px] font-medium">Change list color</p>
-            {isColorSectionOpen ? <ChevronUp /> : <ChevronDown />}
+            <p className="text-[14px] font-medium text-gray-700">
+              Change list color
+            </p>
+            {isColorSectionOpen ? (
+              <ChevronUp size={18} className="text-gray-500" />
+            ) : (
+              <ChevronDown size={18} className="text-gray-500" />
+            )}
           </div>
 
           {/* Collapsible content */}
           <div
             className={`transition-all duration-300 overflow-hidden ${
               isColorSectionOpen
-                ? "max-h-40 opacity-100 mt-2"
+                ? "max-h-48 opacity-100 mt-2"
                 : "max-h-0 opacity-0"
             }`}
           >
-            <div className="grid grid-cols-6 gap-3 w-full">
+            <div className="grid grid-cols-6 gap-3 mt-4 mx-2">
               {COLORS.map((color) => (
                 <button
                   key={color.value}
                   type="button"
                   onClick={() => handleColorSelect(color.value)}
-                  className={`w-full aspect-square rounded-lg transition ${
+                  className={`w-full aspect-square rounded-md transition transform ${
                     selectedColor === color.value
-                      ? "ring-4 ring-blue-500 ring-offset-2 scale-110"
-                      : "hover:scale-110"
+                      ? "ring-2 ring-blue-500 ring-offset-2 scale-110"
+                      : "hover:scale-110 hover:ring-2 hover:ring-gray-200"
                   }`}
                   style={{ backgroundColor: color.value }}
                 />
@@ -86,7 +93,7 @@ export const ListActionModal = ({
             </div>
 
             <button
-              className="bg-gray-400 py-2 w-full mt-3"
+              className="mt-4 w-full py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition text-sm font-medium"
               onClick={() => handleColorSelect("")}
             >
               Remove color
@@ -94,9 +101,10 @@ export const ListActionModal = ({
           </div>
         </div>
 
-        <h4 className="block w-full hover:bg-gray-400 cursor-pointer px-4 py-2">
+        {/* Archive List */}
+        <button className="w-full px-4 py-2 rounded-lg text-left hover:bg-red-50 text-red-600 font-medium transition">
           Archive list
-        </h4>
+        </button>
       </div>
     </div>
   );

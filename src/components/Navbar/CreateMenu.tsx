@@ -3,14 +3,21 @@ import FloatingContainer from "../FloatingContainer";
 import { IconButton } from "../UI/IconButton";
 import { CircuitBoard, LayoutTemplate } from "lucide-react";
 import CreateBoardForm from "./CreateBoardForm";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { createBoard } from "../../store/slices/boardSlice";
+import { useNavigate } from "react-router-dom";
 
 interface CreateMenuProps {
   closeMenu: () => void;
 }
 
 export default function CreateMenu({ closeMenu }: CreateMenuProps) {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { workspaces } = useAppSelector((state) => state.workspaces);
   const [showBoardForm, setShowBoardForm] = useState(false);
   const [showMenu, setShowMenu] = useState(true);
+
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   // ✅ Close when clicking outside
@@ -41,7 +48,7 @@ export default function CreateMenu({ closeMenu }: CreateMenuProps) {
   ];
 
   return (
-    <FloatingContainer className="top-12 right-[21rem] w-[320px]" ref={menuRef}>
+    <FloatingContainer className="top-12 right-[19rem] w-[320px]" ref={menuRef}>
       {items.map((item, i) => (
         <div
           key={i}
@@ -66,6 +73,39 @@ export default function CreateMenu({ closeMenu }: CreateMenuProps) {
             setShowMenu(true);
           }}
           onClose={closeMenu}
+          onCreate={async (data) => {
+            const workspace = workspaces.find(
+              (w) => w.name === data.workspaceName
+            );
+
+            if (!workspace?._id) {
+              console.error("Invalid workspace selected");
+              return;
+            }
+
+            try {
+              // ✅ Dispatch and unwrap the promise to get the actual created board
+              const resultAction = await dispatch(
+                createBoard({
+                  title: data.title,
+                  workspaceId: workspace._id,
+                  description: data.description,
+                  color: data.color
+                })
+              );
+
+              // ✅ If your createBoard thunk returns { board: {...} }
+              const createdBoard = resultAction.payload;
+
+              if (createdBoard?._id) {
+                navigate(`/boards/${createdBoard._id}`);
+              } else {
+                console.error("Board created but ID missing:", createdBoard);
+              }
+            } catch (error) {
+              console.error("Failed to create board:", error);
+            }
+          }}
         />
       )}
     </FloatingContainer>
