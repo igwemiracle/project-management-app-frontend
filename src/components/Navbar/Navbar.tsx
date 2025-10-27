@@ -3,7 +3,6 @@ import {
   Bell,
   HelpCircle,
   Megaphone,
-  User,
   WorkflowIcon
 } from "lucide-react";
 import { IconButton } from "../UI/IconButton";
@@ -11,8 +10,11 @@ import CreateMenu from "./CreateMenu";
 import { useState } from "react";
 import AccountFloatingContainer from "./AccountFloatingContainer";
 import { Link } from "react-router-dom";
+import UserAvatar from "../Auth/UserAvatar";
+import { useAppSelector } from "../../store/hooks";
 
 export default function Navbar() {
+  const { user } = useAppSelector((state) => state.auth);
   const [showCreateMenu, setShowCreateMenu] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
 
@@ -38,10 +40,10 @@ export default function Navbar() {
         </div>
 
         {/* Create Button */}
-        <div className="">
+        <div>
           <button
             onClick={() => setShowCreateMenu((prev) => !prev)}
-            className="bg-blue-500 hover:bg-blue-400 text-sm text-gray-800 rounded-md px-3 py-[6px]"
+            className="bg-blue-600 hover:bg-blue-700 text-sm text-gray-800 rounded-md px-3 py-[6px]"
           >
             Create
           </button>
@@ -53,7 +55,7 @@ export default function Navbar() {
       </div>
 
       {/* Right Section - Icons */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2">
         <IconButton>
           <Megaphone size={18} className="text-gray-300" />
         </IconButton>
@@ -63,12 +65,13 @@ export default function Navbar() {
         <IconButton>
           <HelpCircle size={18} className="text-gray-300" />
         </IconButton>
-        <button
+
+        <IconButton
+          className="cursor-pointer"
           onClick={() => setShowAccountMenu((prev) => !prev)}
-          className="p-2 hover:bg-[#2C2F33] transition-colors duration-200 w-8 h-8 bg-blue-600 text-sm rounded-full flex items-center justify-center font-semibold"
         >
-          <User size={18} />
-        </button>
+          <UserAvatar className="w-5 h-5 text-[9px]" user={user} />
+        </IconButton>
         {showAccountMenu && (
           <AccountFloatingContainer
             closeMenu={() => setShowAccountMenu(false)}

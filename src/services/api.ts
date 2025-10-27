@@ -46,6 +46,58 @@ export const api = {
       return response.json();
     },
 
+    // ✅ Create sub-account
+    createSubAccount: async (data: { fullName: string; username: string; email: string; password: string }) => {
+      const response = await fetch(`${API_BASE_URL}/users/create-sub-account`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Failed to create sub-account");
+      return result;
+    },
+
+    // ✅ Switch account
+    switchAccount: async (targetUserId: string) => {
+      const response = await fetch(`${API_BASE_URL}/users/switch-account/${targetUserId}`, {
+        method: "POST",
+        credentials: "include", // Important for cookies
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to switch account");
+      }
+      return result;
+    }
+
+
+  },
+
+  users: {
+    getOwnedAccounts: async () => {
+      const response = await fetch(`${API_BASE_URL}/users/owned-accounts`, {
+        method: "GET",
+        credentials: "include", // ✅ ensures cookies are sent
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.message || "Failed to fetch sub-accounts");
+      }
+
+
+      const data = await response.json();
+      console.log("DATA.  ", data)
+      return data.accounts; // ✅ only return the array itself
+
+    },
   },
 
   workspaces: {

@@ -3,8 +3,9 @@ import FloatingContainer from "../FloatingContainer";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../store/slices/authSlice";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useModal } from "../../context/ModalContext";
+import UserAvatar from "../Auth/UserAvatar";
 
 interface CreateAccountMenuProps {
   closeMenu: () => void;
@@ -13,6 +14,7 @@ interface CreateAccountMenuProps {
 export default function AccountFloatingContainer({
   closeMenu
 }: CreateAccountMenuProps) {
+  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -43,18 +45,17 @@ export default function AccountFloatingContainer({
         <div>
           <h2 className="text-sm font-semibold text-gray-400 mb-3">ACCOUNT</h2>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white font-bold text-sm">
-              IN
-            </div>
+            <UserAvatar user={user} />
             <div>
-              <p className="font-medium">Igwe Miracle Nzube</p>
-              <p className="text-sm text-gray-400">
-                igwemiraclenszube@gmail.com
-              </p>
+              <p className="font-medium">{user?.fullName}</p>
+              <p className="text-sm text-gray-400">{user?.email}</p>
             </div>
           </div>
           <ul className="">
-            <li className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer">
+            <li
+              onClick={() => navigate("/switch-accounts")}
+              className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer transition-colors duration-200"
+            >
               Switch accounts
             </li>
             <li className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer">
@@ -112,9 +113,9 @@ export default function AccountFloatingContainer({
 
         <div
           onClick={handleLogout}
-          className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer"
+          className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer flex items-baseline"
         >
-          Log out
+          <p className="">Log out</p>
         </div>
       </div>
     </FloatingContainer>

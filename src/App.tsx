@@ -22,6 +22,7 @@ import { GlobalModals } from "./components/GlobalModals";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Homepage from "./components/Homepage/Homepage";
+import { SwitchAccounts } from "./components/Auth/SwitchAccounts";
 
 function AppContent() {
   const dispatch = useAppDispatch();
@@ -47,7 +48,8 @@ function AppContent() {
   const isAuthRoute =
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/register") ||
-    location.pathname.startsWith("/verify-email");
+    location.pathname.startsWith("/verify-email") ||
+    location.pathname.startsWith("/switch-accounts");
 
   if (!isAuthenticated && !isAuthRoute) {
     return <Navigate to="/login" replace />;
@@ -62,8 +64,8 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        {/* <Route path="/workspaces" element={<WorkspaceList />} /> */}
         <Route path="/" element={<Homepage />} />
+        <Route path="/switch-accounts" element={<SwitchAccounts />} />
         <Route path="/workspaces/:workspaceId/boards" element={<BoardList />} />
         <Route path="/boards/:boardId" element={<KanbanBoard />} />
       </Routes>

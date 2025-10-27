@@ -8,6 +8,8 @@ interface AuthState {
   loading: boolean;
   error: string | null;
   initialized: boolean;
+  ownedAccounts: User[];
+  subAccounts: User[];
 }
 
 const initialState: AuthState = {
@@ -15,7 +17,9 @@ const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
   error: null,
-  initialized: false
+  initialized: false,
+  ownedAccounts: [],
+  subAccounts: [],
 };
 
 // ✅ Login
@@ -76,6 +80,47 @@ export const register = createAsyncThunk(
   }
 );
 
+// ✅ Create sub-account
+export const createSubAccount = createAsyncThunk(
+  "users/createSubAccount",
+  async (
+    data: { fullName: string; username: string; email: string; password: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await api.auth.createSubAccount(data);
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to create sub-account");
+    }
+  }
+);
+
+// ✅ Get all owned accounts
+export const fetchOwnedAccounts = createAsyncThunk(
+  "auth/fetchOwnedAccounts",
+  async (_, { rejectWithValue }) => {
+    try {
+      const accounts = await api.users.getOwnedAccounts();
+      return accounts;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to fetch owned accounts");
+    }
+  }
+);
+
+// ✅ Switch account
+export const switchAccount = createAsyncThunk(
+  "auth/switchAccount",
+  async (targetUserId: string, { rejectWithValue }) => {
+    try {
+      const response = await api.auth.switchAccount(targetUserId);
+      return response.user; // returns the switched sub-account
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to switch account");
+    }
+  }
+);
 // ✅ LOGOUT
 export const logoutUser = createAsyncThunk<
   boolean,
@@ -119,7 +164,7 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.user = action.payload.user || action.payload;
+        state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(register.rejected, (state, action) => {
@@ -134,9 +179,9 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.user = action.payload.user || action.payload;
+        state.user = action.payload.user;
         state.isAuthenticated = true;
-        // state.error = null;
+        state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -170,6 +215,49 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
       })
       .addCase(logoutUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // ✅ CREATE SUB ACCOUNT
+      .addCase(createSubAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createSubAccount.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.subAccounts = [...(state.subAccounts || []), action.payload.user];
+      })
+      .addCase(createSubAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // ✅ FETCH ACCOUNTS OWNED BY A USER
+      .addCase(fetchOwnedAccounts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOwnedAccounts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.subAccounts = action.payload;
+      })
+      .addCase(fetchOwnedAccounts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // ✅ SWITCH ACCOUNT
+      .addCase(switchAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(switchAccount.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(switchAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
