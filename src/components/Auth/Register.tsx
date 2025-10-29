@@ -44,7 +44,7 @@ export const Register = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="lg:w-[400px] xs:w-[320px] lg:p-8 mx-auto bg-white shadow-xl xs:p-4 rounded-xl"
+      className="xs:w-full sm:w-[50%] lg:w-[40%] xl:w-[25%] px-6 md:shadow-up-down md:rounded-xl md:p-9"
     >
       <div className="mb-8 text-center">
         <motion.div
@@ -55,9 +55,9 @@ export const Register = () => {
         >
           <UserPlus className="w-8 h-8 text-white" />
         </motion.div>
-        <h2 className="text-2xl font-bold tracking-tight text-center text-gray-900 xs:text-[26px] sm:text-4xl">
+        <p className="font-medium sm:font-normal sm:-mt-2 tracking-tight text-center text-gray-800 xs:text-[33px] sm:text-[36px]">
           Create Account
-        </h2>
+        </p>
 
         <p className="max-w-md mx-auto mt-2 text-sm leading-relaxed text-center text-gray-600 xs:text-base sm:text-lg">
           Join us and start collaborating
