@@ -2,10 +2,15 @@ import { Users } from "lucide-react";
 import FloatingContainer from "../FloatingContainer";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { logoutUser } from "../../store/slices/authSlice";
+import { getProfile, logout, logoutUser } from "../../store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useModal } from "../../context/ModalContext";
 import UserAvatar from "../Auth/UserAvatar";
+import {
+  getStoredAccounts,
+  removeAccountFromStorage,
+  STORAGE_KEY
+} from "../../utils/storage";
 
 interface CreateAccountMenuProps {
   closeMenu: () => void;
@@ -15,8 +20,8 @@ export default function AccountFloatingContainer({
   closeMenu
 }: CreateAccountMenuProps) {
   const { user } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const { openModal } = useModal();
 
@@ -32,8 +37,30 @@ export default function AccountFloatingContainer({
 
   const handleLogout = async () => {
     try {
-      await dispatch(logoutUser()).unwrap();
-      navigate("/login");
+      const { accounts, currentAccount } = getStoredAccounts();
+
+      // Normalize current account id
+      const normalizeId = (acc: any) =>
+        acc?._id || acc?.id || acc?.user?.id || acc?.user?._id;
+
+      if (accounts.length > 1) {
+        const curId = normalizeId(currentAccount);
+        if (curId) {
+          removeAccountFromStorage(curId.toString());
+        }
+
+        try {
+          await dispatch(getProfile()).unwrap();
+        } catch (e) {
+          console.warn("getProfile after local removal failed:", e);
+        }
+        navigate("/switch-accounts");
+      } else {
+        await dispatch(logoutUser()).unwrap();
+        localStorage.removeItem(STORAGE_KEY);
+        dispatch(logout());
+        navigate("/login");
+      }
     } catch (error) {
       console.error("Logout failed:", error);
     }
