@@ -44,7 +44,7 @@ export const Register = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-[410px] xs:w-[360px] lg:w-[410px] px-4 py-8 mx-auto bg-white shadow-xl rounded-2xl"
+      className="w-[410px] xs:w-[360px] lg:w-[410px] xs:px-4 py-8 lg:p-8 mx-auto bg-white shadow-xl rounded-2xl"
     >
       <div className="mb-8 text-center">
         <motion.div
