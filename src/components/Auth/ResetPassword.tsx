@@ -1,14 +1,15 @@
+import React from "react";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, Workflow } from "lucide-react";
+import { Mail, Workflow } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { login, clearError } from "../../store/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 
-export const Login = () => {
+export default function ResetPassword() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const { error, loading } = useAppSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -16,6 +17,7 @@ export const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     dispatch(clearError());
 
     try {
@@ -29,7 +31,6 @@ export const Login = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -41,20 +42,20 @@ export const Login = () => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200 }}
-          className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl"
+          className="flex items-start justify-center gap-3"
         >
-          <Workflow className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-12 h-12 mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl ">
+            <Workflow className="w-7 h-7 text-white" />
+          </div>
+          <h2 className="text-3xl font-semibold text-gray-800 mt-1">Planora</h2>
         </motion.div>
-        <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
-        <p className="mt-2 text-gray-600">
-          Sign in to continue to your workspace
-        </p>
+        <h2 className="text-[16px] font-medium text-gray-700">Can't log in?</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700">
-            Email
+          <label className="block mb-2 text-sm font-medium text-gray-600">
+            We'll send a recovery link to
           </label>
           <div className="relative">
             <Mail className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
@@ -65,25 +66,7 @@ export const Login = () => {
               onChange={handleChange}
               required
               className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="you@example.com"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <div className="relative">
-            <Lock className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter your password"
+              placeholder="Enter email"
             />
           </div>
         </div>
@@ -105,22 +88,19 @@ export const Login = () => {
           disabled={loading}
           className="w-full py-3 font-semibold text-white transition rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? "Signing in..." : "Sign In"}
+          {loading ? "Sending link..." : "Send recovery link"}
         </motion.button>
       </form>
 
-      <div className="flex items-center justify-center gap-2 mt-6 text-center">
-        <Link to={"/reset-password"} className="text-[#5e4eb3] underline">
-          Can't log in?{" "}
-        </Link>
-        <span className="mb-2 text-lg">.</span>
+      <div className="mt-6 text-center flex justify-center items-center gap-2">
         <Link
-          to={"/register"}
-          className="font-semibold text-blue-500 transition cursor-pointer hover:text-blue-700"
+          to={"/login"}
+          className="font-normal text-blue-600 transition cursor-pointer hover:text-blue-700 hover:underline"
         >
-          Create an account
+          Return to log in
         </Link>
+        <hr className="border-gray-700" />
       </div>
     </motion.div>
   );
-};
+}

@@ -39,18 +39,22 @@ export default function AccountFloatingContainer({
     }
   };
 
+  const flatUser = user;
+
   return (
     <FloatingContainer className="right-0 top-12 w-[310px]" ref={menuRef}>
-      <div className="w-full text-gray-200 rounded-b-xl shadow-lg space-y-3 p-4">
+      <div className="w-full p-4 space-y-3 text-gray-200 shadow-lg rounded-b-xl">
         <div>
-          <h2 className="text-sm font-semibold text-gray-400 mb-3">ACCOUNT</h2>
-          <div className="flex items-center gap-3 mb-2">
-            <UserAvatar user={user} />
-            <div>
-              <p className="font-medium">{user?.fullName}</p>
-              <p className="text-sm text-gray-400">{user?.email}</p>
+          <h2 className="mb-3 text-sm font-semibold text-gray-400">ACCOUNT</h2>
+          {user && (
+            <div className="flex items-center gap-3 mb-2">
+              <UserAvatar user={flatUser} />
+              <div>
+                <p className="font-medium">{flatUser?.fullName}</p>
+                <p className="text-sm text-gray-400">{flatUser?.email}</p>
+              </div>
             </div>
-          </div>
+          )}
           <ul className="">
             <li
               onClick={() => navigate("/switch-accounts")}
@@ -67,7 +71,7 @@ export default function AccountFloatingContainer({
         <hr className="border-gray-700" />
 
         <div>
-          <h2 className="text-sm font-semibold text-gray-400 mb-3">PLANORA</h2>
+          <h2 className="mb-3 text-sm font-semibold text-gray-400">PLANORA</h2>
           <ul>
             <li className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer">
               Profile and visibility

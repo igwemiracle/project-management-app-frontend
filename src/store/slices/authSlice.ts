@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { api } from "../../services/api";
 import { User } from "../../types";
+import { addAccountToStorage, getStoredAccounts, removeAccountFromStorage } from "../../utils/storage";
 
 interface AuthState {
   user: User | null;
@@ -8,8 +9,7 @@ interface AuthState {
   loading: boolean;
   error: string | null;
   initialized: boolean;
-  ownedAccounts: User[];
-  subAccounts: User[];
+  ownedAccounts: [],
 }
 
 const initialState: AuthState = {
@@ -19,41 +19,9 @@ const initialState: AuthState = {
   error: null,
   initialized: false,
   ownedAccounts: [],
-  subAccounts: [],
 };
 
-// ✅ Login
-export const login = createAsyncThunk(
-  "auth/login",
-  async (data: { email: string; password: string }, { rejectWithValue }) => {
-    try {
-      const response = await api.auth.login(data);
-      return response;
-    } catch (error: any) {
-      // ensure error is string
-      return rejectWithValue(error?.message || "Invalid credentials");
-    }
-  }
-);
-
-// ✅ Get Profile (verifies if cookie session is still valid)
-export const getProfile = createAsyncThunk(
-  "auth/getProfile",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.auth.getProfile();
-
-      if (response.user || response._id) {
-        return response;
-      }
-      return rejectWithValue("No active session found");
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to get profile");
-    }
-  }
-);
-
-// ✅ Register
+// ✅ REGISTER
 export const register = createAsyncThunk(
   "auth/register",
   async (
@@ -80,62 +48,70 @@ export const register = createAsyncThunk(
   }
 );
 
-// ✅ Create sub-account
-export const createSubAccount = createAsyncThunk(
-  "users/createSubAccount",
-  async (
-    data: { fullName: string; username: string; email: string; password: string },
-    { rejectWithValue }
-  ) => {
+// ✅ LOGIN
+export const login = createAsyncThunk(
+  "auth/login",
+  async (data: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await api.auth.createSubAccount(data);
+      const response = await api.auth.login(data);
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to create sub-account");
+      // ensure error is string
+      return rejectWithValue(error?.message || "Invalid credentials");
     }
   }
 );
 
-// ✅ Get all owned accounts
-export const fetchOwnedAccounts = createAsyncThunk(
-  "auth/fetchOwnedAccounts",
+// ✅ GET PROFILE (verifies if cookie session is still valid)
+export const getProfile = createAsyncThunk(
+  "auth/getProfile",
   async (_, { rejectWithValue }) => {
     try {
-      const accounts = await api.users.getOwnedAccounts();
-      return accounts;
+      const response = await api.users.getProfile();
+
+      if (response.user || response._id) {
+        return response;
+      }
+      return rejectWithValue("No active session found");
     } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to fetch owned accounts");
+      return rejectWithValue(error.message || "Failed to get profile");
     }
   }
 );
 
-// ✅ Switch account
+// ✅ SWITCH ACCOUNT
 export const switchAccount = createAsyncThunk(
   "auth/switchAccount",
   async (targetUserId: string, { rejectWithValue }) => {
     try {
-      const response = await api.auth.switchAccount(targetUserId);
-      return response.user; // returns the switched sub-account
+      const user = await api.users.SwitchAccount(targetUserId);
+      return user;
     } catch (error: any) {
       return rejectWithValue(error.message || "Failed to switch account");
     }
   }
 );
+
+// ✅ REMOVE CURRENT ACCOUNT
+export const removeAccount = createAsyncThunk(
+  "auth/removeAccount",
+  async (_, { rejectWithValue }) => {
+    try {
+      const message = await api.users.RemoveAccount();
+      return message;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to remove account");
+    }
+  }
+);
+
 // ✅ LOGOUT
-export const logoutUser = createAsyncThunk<
-  boolean,
-  void,
-  { rejectValue: string } // ✅ Rejected value type
->(
+export const logoutUser = createAsyncThunk<boolean, void, { rejectValue: string }>(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.auth.logout();
-
-      if (response.success) {
-        return true; // success
-      }
-
+      if (response.success) return true;
       return rejectWithValue(response.message || "Logout failed");
     } catch (error: any) {
       return rejectWithValue(error.message || "Logout failed");
@@ -150,6 +126,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
+      state.loading = false;
+
     },
     clearError: (state) => {
       state.error = null;
@@ -157,7 +135,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // REGISTER
+      // ✅ REGISTER
       .addCase(register.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -172,7 +150,7 @@ const authSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // LOGIN
+      // ✅ LOGIN
       .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -181,6 +159,13 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
+
+        // UPDATE LOCAL STORAGE
+        addAccountToStorage(action.payload);
+
+        // RELOAD STORED ACCOUNT INTO STATE
+        const { accounts } = getStoredAccounts();
+        state.ownedAccounts = accounts;
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
@@ -188,7 +173,7 @@ const authSlice = createSlice({
         state.error = action.payload as string || "Login failed";;
       })
 
-      // GET PROFILE
+      // ✅ GET PROFILE
       .addCase(getProfile.pending, (state) => {
         state.loading = true;
       })
@@ -196,16 +181,16 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user || action.payload;
         state.isAuthenticated = true;
-        state.initialized = true; // ✅ finished checking
+        state.initialized = true;
       })
       .addCase(getProfile.rejected, (state) => {
         state.loading = false;
         state.user = null;
         state.isAuthenticated = false;
-        state.initialized = true; // ✅ even if failed, mark initialized
+        state.initialized = true;
       })
 
-      // LOGOUT USER
+      // ✅ LOGOUT USER
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
       })
@@ -219,45 +204,43 @@ const authSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // ✅ CREATE SUB ACCOUNT
-      .addCase(createSubAccount.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(createSubAccount.fulfilled, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.subAccounts = [...(state.subAccounts || []), action.payload.user];
-      })
-      .addCase(createSubAccount.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-
-      // ✅ FETCH ACCOUNTS OWNED BY A USER
-      .addCase(fetchOwnedAccounts.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchOwnedAccounts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.subAccounts = action.payload;
-      })
-      .addCase(fetchOwnedAccounts.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
 
       // ✅ SWITCH ACCOUNT
       .addCase(switchAccount.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(switchAccount.fulfilled, (state, action: PayloadAction<any>) => {
+
+      .addCase(switchAccount.fulfilled, (state, action: PayloadAction<User>) => {
         state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
+        addAccountToStorage(action.payload);
+        const { currentAccount, accounts } = getStoredAccounts();
+        state.user = currentAccount;
+        state.ownedAccounts = accounts;
+        state.error = null;
       })
       .addCase(switchAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // ✅ REMOVE ACCOUNTS
+      .addCase(removeAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(removeAccount.fulfilled, (state, action: PayloadAction<string>) => {
+        removeAccountFromStorage(action.payload);
+        const { currentAccount, accounts } = getStoredAccounts();
+        state.user = currentAccount;
+        state.ownedAccounts = accounts;
+        state.isAuthenticated = !!currentAccount;
+      })
+
+      .addCase(removeAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

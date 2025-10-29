@@ -37,7 +37,9 @@ export const api = {
       });
       return response.json();
     },
+  },
 
+  users: {
     getProfile: async () => {
       const response = await fetch(`${API_BASE_URL}/users/profile`, {
         method: "GET",
@@ -46,9 +48,9 @@ export const api = {
       return response.json();
     },
 
-    // ✅ Create sub-account
+    // ✅ CREATE SUB-ACCOUNT
     createSubAccount: async (data: { fullName: string; username: string; email: string; password: string }) => {
-      const response = await fetch(`${API_BASE_URL}/users/create-sub-account`, {
+      const response = await fetch(`${API_BASE_URL}/users/subaccounts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -56,32 +58,49 @@ export const api = {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || "Failed to create sub-account");
-      return result;
+      return result.user;
     },
 
-    // ✅ Switch account
-    switchAccount: async (targetUserId: string) => {
-      const response = await fetch(`${API_BASE_URL}/users/switch-account/${targetUserId}`, {
+    // ✅ SWITCH ACCOUNT
+    SwitchAccount: async (targetUserId: string) => {
+      const response = await fetch(`${API_BASE_URL}/account/switch-account`, {
         method: "POST",
-        credentials: "include", // Important for cookies
+        credentials: "include", // important to send cookies
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: targetUserId }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to switch account");
+      }
+
+      return result.user;
+    },
+
+    // ✅ REMOVE ACCOUNT FROM THIS BROWSER
+    RemoveAccount: async () => {
+      const response = await fetch(`${API_BASE_URL}/account/remove-account`, {
+        method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
       });
 
       const result = await response.json();
+
       if (!response.ok) {
-        throw new Error(result.message || "Failed to switch account");
+        throw new Error(result.message || "Failed to remove account");
       }
-      return result;
-    }
 
+      return result.message;
+    },
 
-  },
-
-  users: {
+    // ✅ GET OWNED ACCOUNTS
     getOwnedAccounts: async () => {
       const response = await fetch(`${API_BASE_URL}/users/owned-accounts`, {
         method: "GET",
-        credentials: "include", // ✅ ensures cookies are sent
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -94,10 +113,10 @@ export const api = {
 
 
       const data = await response.json();
-      console.log("DATA.  ", data)
-      return data.accounts; // ✅ only return the array itself
+      return data.accounts;
 
     },
+
   },
 
   workspaces: {
