@@ -34,7 +34,7 @@ export const Login = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-[448px] mt-44 mx-auto max-w-md p-8 bg-white rounded-2xl shadow-xl"
+      className="w-[410px] xs:w-[360px] lg:w-[410px] px-4 py-8 mx-auto bg-white shadow-xl rounded-2xl"
     >
       <div className="mb-8 text-center">
         <motion.div

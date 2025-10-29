@@ -104,7 +104,7 @@ export const KanbanBoard = () => {
             </button>
 
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-lg font-semibold text-gray-900 lg:text-2xl">
                 <h2>{activeBoard?.title}</h2>
               </h1>
               {currentBoard?.description && (

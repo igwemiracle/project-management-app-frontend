@@ -74,7 +74,7 @@ export default function CreateBoardForm({
   const isFormValid = formData.title && selectedWorkspace && selectedVisibility;
 
   return (
-    <FloatingContainer className="top-0 right-0 w-[320px] text-white bg-[#1D2125] p-4 rounded-lg shadow-lg">
+    <FloatingContainer className="w-[320px] text-white bg-[#1D2125] p-4 rounded-lg shadow-lg">
       {/* Header */}
       <div className="flex items-center justify-between w-full mb-4">
         <ChevronLeft

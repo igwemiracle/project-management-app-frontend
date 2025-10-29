@@ -69,7 +69,10 @@ export default function AccountFloatingContainer({
   const flatUser = user;
 
   return (
-    <FloatingContainer className="right-0 top-12 w-[310px]" ref={menuRef}>
+    <FloatingContainer
+      className="xs:-right-[57px] lg:-right-4 top-[42px] w-[310px]"
+      ref={menuRef}
+    >
       <div className="w-full p-4 space-y-3 text-gray-200 shadow-lg rounded-b-xl">
         <div>
           <h2 className="mb-3 text-sm font-semibold text-gray-400">ACCOUNT</h2>

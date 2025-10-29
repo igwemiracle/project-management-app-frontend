@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Briefcase, Users, Calendar } from "lucide-react";
+
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchWorkspaces } from "../../store/slices/workspaceSlice";
 import { useNavigate } from "react-router-dom";
@@ -29,81 +30,79 @@ export const WorkspaceList = () => {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="mb-2 text-4xl font-bold text-gray-900">
+    <div className="min-h-screen px-3 py-4 xs:px-4 xs:py-6 sm:p-6 md:p-8 bg-gradient-to-br from-[hsl(var(--workspace-gradient-from))] to-[hsl(var(--workspace-gradient-to))]">
+      <div className="w-full mx-auto max-w-7xl">
+        <div className="flex flex-col gap-3 mb-4 xs:gap-4 xs:mb-6 sm:flex-row sm:items-center sm:justify-between sm:mb-8">
+          <div className="min-w-0">
+            <h1 className="mb-1 text-2xl font-bold leading-tight text-foreground xs:text-3xl sm:text-4xl sm:mb-2">
               Your Workspaces
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm text-muted-foreground xs:text-base">
               Select a workspace to start collaborating
             </p>
           </div>
-          {/* <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => openModal("workspace")}
-            className="flex items-center gap-2 px-6 py-3 text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
-          >
-            <Plus className="w-5 h-5" />
-            New Workspace
-          </motion.button> */}
         </div>
 
         {!workspaces || workspaces.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="py-16 text-center"
+            className="py-8 text-center xs:py-12 sm:py-16"
           >
-            <Briefcase className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-            <h3 className="mb-2 text-xl font-semibold text-gray-700">
+            <Briefcase className="w-40 h-12 mx-auto mb-3 xs:w-14 xs:h-14 sm:w-16 sm:h-16 sm:mb-4 text-muted-foreground/60" />
+            <h3 className="mb-2 text-lg font-semibold xs:text-xl text-foreground">
               No workspaces yet
             </h3>
-            <p className="mb-6 text-gray-500">
+            <p className="mb-4 text-sm xs:text-base xs:mb-6 text-muted-foreground">
               Create your first workspace to get started
             </p>
             <button
-              // onClick={() => setShowCreateModal(true)}
               onClick={() => openModal("workspace")}
-              className="px-6 py-3 text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
+              className="w-full px-6 py-3 text-sm xs:w-auto xs:text-base"
             >
               Create Workspace
             </button>
           </motion.div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 xs:gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
             {workspaces.map((workspace, index) => (
               <motion.div
                 key={workspace._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 onClick={() => handleSelectWorkspace(workspace._id)}
-                className="p-6 transition bg-white border border-gray-200 shadow-sm cursor-pointer rounded-xl hover:shadow-xl"
+                className="p-4 transition-all border rounded-lg shadow-sm cursor-pointer bg-card border-border xs:p-5 sm:p-6 xs:rounded-xl hover:shadow-lg hover:border-primary/20"
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600">
-                    <Briefcase className="w-6 h-6 text-white" />
+                <div className="flex items-start justify-between mb-3 xs:mb-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg xs:w-12 xs:h-12 bg-gradient-to-br from-[hsl(var(--workspace-icon-bg-from))] to-[hsl(var(--workspace-icon-bg-to))]">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600">
+                      <Briefcase className="w-6 h-6 text-white" />
+                    </div>
                   </div>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                <h3 className="mb-1 text-base font-semibold leading-tight xs:text-lg xs:mb-2 text-card-foreground line-clamp-1">
                   {workspace.name}
                 </h3>
-                <p className="mb-4 text-sm text-gray-600 line-clamp-2">
+                <p className="mb-3 text-xs xs:text-sm xs:mb-4 text-muted-foreground line-clamp-2">
                   {workspace.description || "No description"}
                 </p>
-                <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-3 text-xs xs:gap-4 xs:text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4" />
+                    <Users className="w-3 h-3 xs:w-4 xs:h-4" />
                     <span>{workspace.members.length}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>
-                      {new Date(workspace.createdAt).toLocaleDateString()}
+                    <Calendar className="w-3 h-3 xs:w-4 xs:h-4" />
+                    <span className="truncate">
+                      {new Date(workspace.createdAt).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric"
+                        }
+                      )}
                     </span>
                   </div>
                 </div>

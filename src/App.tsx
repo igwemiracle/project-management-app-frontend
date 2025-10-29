@@ -23,6 +23,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Homepage from "./components/Homepage/Homepage";
 import { SwitchAccounts } from "./components/Auth/SwitchAccounts";
+import { AuthLayout } from "./components/Auth/AuthLayout";
 
 function AppContent() {
   const dispatch = useAppDispatch();
@@ -39,9 +40,10 @@ function AppContent() {
   if (!initialized) {
     // ✅ Wait until auth check completes before deciding
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin" />
-      </div>
+      // <div className="flex items-center justify-center h-screen">
+      //   <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin" />
+      // </div>
+      <div></div>
     );
   }
 
@@ -61,11 +63,40 @@ function AppContent() {
       {!isAuthRoute && <Navbar />}
 
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route
+          path="/login"
+          element={
+            <AuthLayout>
+              <Login />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <AuthLayout>
+              <Register />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/verify-email"
+          element={
+            <AuthLayout>
+              <VerifyEmail />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/switch-accounts"
+          element={
+            <AuthLayout>
+              <SwitchAccounts />
+            </AuthLayout>
+          }
+        />
+        {/* Main app routes */}
         <Route path="/" element={<Homepage />} />
-        <Route path="/switch-accounts" element={<SwitchAccounts />} />
         <Route path="/workspaces/:workspaceId/boards" element={<BoardList />} />
         <Route path="/boards/:boardId" element={<KanbanBoard />} />
       </Routes>

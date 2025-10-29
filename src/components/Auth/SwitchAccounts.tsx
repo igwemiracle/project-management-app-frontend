@@ -101,7 +101,7 @@ export const SwitchAccounts = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-[400px] mt-36 mx-auto max-w-md p-8 bg-white rounded-2xl shadow-xl flex flex-col items-center"
+      className="flex flex-col items-center w-[410px] xs:w-[360px] lg:w-[410px] p-8 mx-auto bg-white shadow-xl rounded-2xl"
     >
       {/* Header */}
       <div className="mb-8 text-center">

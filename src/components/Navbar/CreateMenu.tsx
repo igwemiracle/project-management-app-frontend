@@ -48,7 +48,7 @@ export default function CreateMenu({ closeMenu }: CreateMenuProps) {
   ];
 
   return (
-    <FloatingContainer className="top-12 right-[19rem] w-[320px]" ref={menuRef}>
+    <FloatingContainer className="top-12 w-[320px]" ref={menuRef}>
       {items.map((item, i) => (
         <div
           key={i}
