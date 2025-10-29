@@ -34,22 +34,25 @@ export const Login = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="lg:w-[400px] xs:w-[320px] lg:p-8 mx-auto bg-white shadow-xl xs:p-4 rounded-xl"
+      className="xs:w-full sm:w-[50%] lg:w-[40%] xl:w-[25%] px-6 md:shadow-up-down md:rounded-xl md:p-9"
     >
-      <div className="mb-8 text-center">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 200 }}
-          className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl"
-        >
-          <Workflow className="w-10 h-10 text-white" />
-        </motion.div>
-        <h2 className="text-2xl font-bold tracking-tight text-center text-gray-900 xs:text-[26px] sm:text-4xl">
-          Welcome Back
-        </h2>
-        <p className="max-w-md mx-auto mt-2 text-sm leading-relaxed text-center text-gray-600 xs:text-base sm:text-lg">
-          Sign in to continue to your workspace
+      <div className="mx-auto mb-2 space-y-4">
+        <div className="flex items-start justify-center gap-2">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200 }}
+            className="inline-flex items-center justify-center xs:size-12 sm:size-[44px] lg:size-[40px] bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl"
+          >
+            <Workflow className="text-white lg:size-6 xs:size-7" />
+          </motion.div>
+          <p className="font-medium sm:font-normal sm:-mt-2 tracking-tight text-center text-gray-800 xs:text-[33px] sm:text-[36px]">
+            Planora
+          </p>
+        </div>
+
+        <p className="max-w-md mx-auto text-sm font-semibold leading-relaxed text-center text-gray-700 xs:text-base">
+          Log in to continue
         </p>
       </div>
 
@@ -66,7 +69,7 @@ export const Login = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full py-2 pl-10 pr-4 transition border border-gray-400 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="you@example.com"
             />
           </div>
@@ -84,7 +87,7 @@ export const Login = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full py-2 pl-10 pr-4 transition border border-gray-400 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your password"
             />
           </div>
@@ -112,7 +115,7 @@ export const Login = () => {
       </form>
 
       <div className="flex items-center justify-center gap-2 mt-6 text-center">
-        <Link to={"/reset-password"} className="text-[#5e4eb3] underline">
+        <Link to={"/reset-password"} className="text-blue-500 underline">
           Can't log in?{" "}
         </Link>
         <span className="mb-2 text-lg">.</span>
@@ -123,6 +126,8 @@ export const Login = () => {
           Create an account
         </Link>
       </div>
+
+      <hr className="mt-5 text-gray-600" />
     </motion.div>
   );
 };
