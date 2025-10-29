@@ -34,7 +34,7 @@ export const Login = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-[410px] xs:w-[360px] lg:w-[410px] xs:px-4 py-8 lg:p-8 mx-auto bg-white shadow-xl rounded-2xl"
+      className="lg:w-[400px] xs:w-[320px] lg:p-8 mx-auto bg-white shadow-xl xs:p-4 rounded-xl"
     >
       <div className="mb-8 text-center">
         <motion.div
@@ -45,8 +45,10 @@ export const Login = () => {
         >
           <Workflow className="w-10 h-10 text-white" />
         </motion.div>
-        <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
-        <p className="mt-2 text-gray-600">
+        <h2 className="text-2xl font-bold tracking-tight text-center text-gray-900 xs:text-[26px] sm:text-4xl">
+          Welcome Back
+        </h2>
+        <p className="max-w-md mx-auto mt-2 text-sm leading-relaxed text-center text-gray-600 xs:text-base sm:text-lg">
           Sign in to continue to your workspace
         </p>
       </div>

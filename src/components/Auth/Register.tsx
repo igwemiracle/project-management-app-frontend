@@ -44,7 +44,7 @@ export const Register = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-[410px] xs:w-[360px] lg:w-[410px] xs:px-4 py-8 lg:p-8 mx-auto bg-white shadow-xl rounded-2xl"
+      className="lg:w-[400px] xs:w-[320px] lg:p-8 mx-auto bg-white shadow-xl xs:p-4 rounded-xl"
     >
       <div className="mb-8 text-center">
         <motion.div
@@ -55,8 +55,13 @@ export const Register = () => {
         >
           <UserPlus className="w-8 h-8 text-white" />
         </motion.div>
-        <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
-        <p className="mt-2 text-gray-600">Join us and start collaborating</p>
+        <h2 className="text-2xl font-bold tracking-tight text-center text-gray-900 xs:text-[26px] sm:text-4xl">
+          Create Account
+        </h2>
+
+        <p className="max-w-md mx-auto mt-2 text-sm leading-relaxed text-center text-gray-600 xs:text-base sm:text-lg">
+          Join us and start collaborating
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
