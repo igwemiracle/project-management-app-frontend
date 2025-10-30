@@ -23,7 +23,7 @@ export default function AccountList({
 }: AccountListProps) {
   if (!accounts || accounts.length === 0) {
     return (
-      <div className="w-[330px] bg-white text-gray-400 text-center py-5">
+      <div className="py-5 text-center text-gray-400 bg-white">
         No accounts logged in
       </div>
     );
@@ -43,7 +43,7 @@ export default function AccountList({
   });
 
   return (
-    <div className="w-[330px] bg-white flex flex-col gap-2">
+    <div className="flex flex-col gap-2 bg-white ">
       {sortedAccounts.map((account, index) => {
         const isCurrent = current?.email === account.email;
         const accountId = account._id || account.id || index;

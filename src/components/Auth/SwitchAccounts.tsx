@@ -101,7 +101,7 @@ export const SwitchAccounts = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col items-center lg:w-[400px] xs:w-[320px] lg:p-8 mx-auto bg-white shadow-xl xs:p-4 rounded-xl"
+      className="xs:w-full sm:w-[50%] lg:w-[40%] xl:w-[25%] px-6 md:shadow-up-down md:rounded-xl md:p-9"
     >
       {/* Header */}
       <div className="mb-8 text-center">
@@ -132,7 +132,7 @@ export const SwitchAccounts = () => {
       {/* Add account */}
       <div
         onClick={handleAddAccount}
-        className="border-b py-7 px-3 border-slate-200 flex items-center gap-3 hover:bg-gray-100 w-[330px] cursor-pointer"
+        className="flex items-center gap-3 px-3 border-b cursor-pointer py-7 border-slate-200 hover:bg-gray-100"
       >
         <UserIcon size={26} />
         <p className="text-gray-600">Add another account</p>
