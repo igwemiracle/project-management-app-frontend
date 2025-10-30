@@ -95,11 +95,11 @@ export default function Navbar() {
         {/* Mobile Menu Button - Visible below lg */}
         <button
           onClick={() => setShowMobileMenu(true)}
-          className="lg:hidden p-1.5 sm:p-2 hover:bg-[#2C2F33] transition-colors rounded-md"
+          className="lg:hidden p-1.5 sm:p-2 hover:bg-[#2C2F33] transition-colors  rounded-md"
         >
           <Menu
             size={24}
-            className="text-gray-300 w-6 h-6 sm:w-5 sm:h-5 xs:text-[10px] sm:text-[8px]"
+            className="text-gray-300 w-6 h-6 sm:w-5 sm:h-5 xs:text-[10px] sm:text-[8px] transition"
           />
         </button>
       </div>

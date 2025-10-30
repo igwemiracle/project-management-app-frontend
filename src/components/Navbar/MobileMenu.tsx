@@ -6,18 +6,22 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  if (!isOpen) return null;
-
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop with fade effect */}
       <div
-        className="fixed inset-0 z-40 bg-black/50 md:hidden"
+        className={`fixed inset-0 z-40 bg-black/50 lg:hidden transition-opacity duration-500 ease-in-out ${
+          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
         onClick={onClose}
       />
 
       {/* Slide-in Menu */}
-      <div className="fixed top-0 right-0 h-full w-64 bg-[#1D2125] z-50 shadow-2xl md:hidden transform transition-transform duration-300">
+      <div
+        className={`fixed top-0 right-0 h-full w-64 bg-[#1D2125] z-50 shadow-2xl lg:hidden transform transition-transform duration-500 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-[#3A3F44]">
           <span className="text-sm font-semibold text-gray-200">Menu</span>
