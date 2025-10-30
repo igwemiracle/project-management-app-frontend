@@ -64,7 +64,7 @@ export default function ResetPassword() {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-400 rounded-lg focus:border-blue-300"
+              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter email"
             />
           </div>

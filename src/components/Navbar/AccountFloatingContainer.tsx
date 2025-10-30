@@ -123,7 +123,10 @@ export default function AccountFloatingContainer({
         </div>
         <hr className="border-gray-700" />
         <div
-          onClick={() => openModal("workspace")}
+          onClick={() => {
+            openModal("workspace");
+            closeMenu();
+          }}
           className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2"
         >
           <span>

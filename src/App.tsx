@@ -52,7 +52,8 @@ function AppContent() {
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/register") ||
     location.pathname.startsWith("/verify-email") ||
-    location.pathname.startsWith("/switch-accounts");
+    location.pathname.startsWith("/switch-accounts") ||
+    location.pathname.startsWith("/reset-password");
 
   if (!isAuthenticated && !isAuthRoute) {
     return <Navigate to="/login" replace />;

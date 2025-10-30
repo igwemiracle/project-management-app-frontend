@@ -51,9 +51,9 @@ export const Register = () => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200 }}
-          className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl"
+          className="inline-flex items-center justify-center xs:size-12 sm:size-[44px] lg:size-[40px] mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-xl"
         >
-          <UserPlus className="w-8 h-8 text-white" />
+          <UserPlus className="text-white lg:size-6 xs:size-7" />
         </motion.div>
         <p className="font-medium sm:font-normal sm:-mt-2 tracking-tight text-center text-gray-800 xs:text-[33px] sm:text-[36px]">
           Create Account
@@ -77,7 +77,7 @@ export const Register = () => {
               value={formData.fullName}
               onChange={handleChange}
               required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="John Doe"
             />
           </div>
@@ -95,7 +95,7 @@ export const Register = () => {
               value={formData.username}
               onChange={handleChange}
               required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="johndoe"
             />
           </div>
@@ -113,7 +113,7 @@ export const Register = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="you@example.com"
             />
           </div>
@@ -131,21 +131,11 @@ export const Register = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="Create a strong password"
             />
           </div>
         </div>
-
-        {/* {error && (
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="p-3 text-sm text-red-700 border border-red-200 rounded-lg bg-red-50"
-          >
-            {error}
-          </motion.div>
-        )} */}
 
         <motion.button
           whileHover={{ scale: 1.02 }}
