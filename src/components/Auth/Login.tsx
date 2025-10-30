@@ -69,7 +69,7 @@ export const Login = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full py-2 pl-10 pr-4 transition border border-gray-400 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full py-2 pl-10 pr-4 transition border border-gray-400 rounded-sm focus:border-blue-500"
               placeholder="you@example.com"
             />
           </div>
@@ -87,7 +87,7 @@ export const Login = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full py-2 pl-10 pr-4 transition border border-gray-400 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full py-2 pl-10 pr-4 transition border border-gray-400 rounded-sm focus:border-blue-500"
               placeholder="Enter your password"
             />
           </div>

@@ -22,7 +22,7 @@ export const VerifyEmail = () => {
           message: string;
         }
         const res = await axios.get<VerifyEmailResponse>(
-          `http://localhost:5000/api/auth/verify-email?token=${token}`
+          `${import.meta.env.VITE_API_URL}/auth/verify-email?token=${token}`
         );
 
         if (
@@ -53,14 +53,14 @@ export const VerifyEmail = () => {
   }, [searchParams, navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
-      <div className="bg-white shadow-lg rounded-2xl p-8 text-center max-w-md w-full">
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-50 via-white to-green-50">
+      <div className="w-full max-w-md p-8 text-center bg-white shadow-lg rounded-2xl">
         {status === "verifying" && (
           <>
             <h2 className="text-xl font-semibold text-gray-800">
               Verifying your email...
             </h2>
-            <p className="text-gray-500 mt-2">
+            <p className="mt-2 text-gray-500">
               Please wait while we confirm your email.
             </p>
           </>
@@ -71,7 +71,7 @@ export const VerifyEmail = () => {
             <h2 className="text-xl font-semibold text-green-600">
               Email Verified!
             </h2>
-            <p className="text-gray-600 mt-2">
+            <p className="mt-2 text-gray-600">
               Your email has been successfully verified. Redirecting to login...
             </p>
           </>
@@ -82,7 +82,7 @@ export const VerifyEmail = () => {
             <h2 className="text-xl font-semibold text-red-600">
               Verification Failed
             </h2>
-            <p className="text-gray-600 mt-2">
+            <p className="mt-2 text-gray-600">
               The verification link is invalid or expired. Please request a new
               one.
             </p>

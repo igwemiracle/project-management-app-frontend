@@ -35,26 +35,25 @@ export default function ResetPassword() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-[448px] mt-44 mx-auto max-w-md p-8 bg-white rounded-2xl shadow-xl"
+      className="xs:w-full sm:w-[50%] lg:w-[40%] xl:w-[25%] px-6 md:shadow-up-down md:rounded-xl md:p-9"
     >
-      <div className="mb-8 text-center">
+      <div className="flex items-start justify-center gap-2 mb-8">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200 }}
-          className="flex items-start justify-center gap-3"
+          className="inline-flex items-center justify-center xs:size-12 sm:size-[44px] lg:size-[40px] bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl"
         >
-          <div className="inline-flex items-center justify-center w-12 h-12 mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl ">
-            <Workflow className="w-7 h-7 text-white" />
-          </div>
-          <h2 className="text-3xl font-semibold text-gray-800 mt-1">Planora</h2>
+          <Workflow className="text-white lg:size-6 xs:size-7" />
         </motion.div>
-        <h2 className="text-[16px] font-medium text-gray-700">Can't log in?</h2>
+        <p className="font-medium sm:font-normal sm:-mt-2 tracking-tight text-center text-gray-800 xs:text-[33px] sm:text-[36px]">
+          Planora
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block mb-2 text-sm font-medium text-gray-600">
+          <label className="block mb-2 text-sm font-medium text-gray-700">
             We'll send a recovery link to
           </label>
           <div className="relative">
@@ -65,7 +64,7 @@ export default function ResetPassword() {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full py-3 pl-10 pr-4 transition border border-gray-400 rounded-lg focus:border-blue-300"
               placeholder="Enter email"
             />
           </div>
@@ -92,7 +91,7 @@ export default function ResetPassword() {
         </motion.button>
       </form>
 
-      <div className="mt-6 text-center flex justify-center items-center gap-2">
+      <div className="flex items-center justify-center gap-2 mt-6 text-center">
         <Link
           to={"/login"}
           className="font-normal text-blue-600 transition cursor-pointer hover:text-blue-700 hover:underline"
@@ -101,6 +100,7 @@ export default function ResetPassword() {
         </Link>
         <hr className="border-gray-700" />
       </div>
+      <hr className="mt-5 text-gray-600" />
     </motion.div>
   );
 }

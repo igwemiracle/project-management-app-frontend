@@ -24,6 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Homepage from "./components/Homepage/Homepage";
 import { SwitchAccounts } from "./components/Auth/SwitchAccounts";
 import { AuthLayout } from "./components/Auth/AuthLayout";
+import ResetPassword from "./components/Auth/ResetPassword";
 
 function AppContent() {
   const dispatch = useAppDispatch();
@@ -95,6 +96,15 @@ function AppContent() {
             </AuthLayout>
           }
         />
+        <Route
+          path="/reset-password"
+          element={
+            <AuthLayout>
+              <ResetPassword />
+            </AuthLayout>
+          }
+        />
+
         {/* Main app routes */}
         <Route path="/" element={<Homepage />} />
         <Route path="/workspaces/:workspaceId/boards" element={<BoardList />} />
