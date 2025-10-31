@@ -42,7 +42,7 @@ const BoardCard = ({
           })`
         }}
       >
-        <h3 className="font-semibold text-white xs:text-base xxs:text-[12px] sm:text-base lg:text-lg xxs:leading-4">
+        <h3 className="font-semibold text-white xs:text-base xxs:text-[14px] sm:text-base lg:text-lg xxs:leading-4">
           {board.title}
         </h3>
       </div>

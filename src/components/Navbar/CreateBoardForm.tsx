@@ -125,7 +125,7 @@ export default function CreateBoardForm({
               setFormData({ ...formData, title: e.target.value })
             }
             placeholder="My Awesome Board"
-            className="w-full px-3 py-2 text-sm text-gray-200 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full px-3 py-2 text-sm text-gray-800 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 

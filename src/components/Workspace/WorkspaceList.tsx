@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/ModalContext";
 import CreateBoardForm from "../Navbar/CreateBoardForm";
 import { createBoard } from "../../store/slices/boardSlice";
+import WorkspaceSkeleton from "../SkeletonLoader/WorkspaceSkeleton";
 
 export const WorkspaceList = () => {
   const dispatch = useAppDispatch();
@@ -33,14 +34,6 @@ export const WorkspaceList = () => {
   const handleSelectWorkspace = (workspaceId: string) => {
     navigate(`/workspaces/${workspaceId}/boards`);
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin" />
-      </div>
-    );
-  }
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Boards" },
@@ -65,7 +58,11 @@ export const WorkspaceList = () => {
         </div>
 
         {/* Empty State */}
-        {!workspaces || workspaces.length === 0 ? (
+        {loading ? (
+          // 🌀 Show skeleton while loading
+          <WorkspaceSkeleton />
+        ) : !workspaces || workspaces.length === 0 ? (
+          // 📭 Empty state
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -86,7 +83,7 @@ export const WorkspaceList = () => {
             </button>
           </motion.div>
         ) : (
-          /* Workspaces Grid */
+          // ✅ Actual Workspaces Grid
           <div className="grid grid-cols-1 xs:gap-y-10 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
             {workspaces.map((workspace, index) => {
               const isFormOpen = selectedWorkspaceId === workspace._id;
@@ -129,7 +126,7 @@ export const WorkspaceList = () => {
                     Create new board
                   </motion.div>
 
-                  {/* Form Overlay (inside same card) */}
+                  {/* Form Overlay */}
                   <AnimatePresence>
                     {isFormOpen && (
                       <motion.div

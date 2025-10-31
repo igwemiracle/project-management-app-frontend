@@ -25,6 +25,7 @@ import Homepage from "./components/Homepage/Homepage";
 import { SwitchAccounts } from "./components/Auth/SwitchAccounts";
 import { AuthLayout } from "./components/Auth/AuthLayout";
 import ResetPassword from "./components/Auth/ResetPassword";
+import Loader from "./components/UI/Loader";
 
 function AppContent() {
   const dispatch = useAppDispatch();
@@ -41,10 +42,8 @@ function AppContent() {
   if (!initialized) {
     // ✅ Wait until auth check completes before deciding
     return (
-      // <div className="flex items-center justify-center h-screen">
-      //   <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin" />
-      // </div>
-      <div></div>
+      <Loader />
+      // <div></div>
     );
   }
 

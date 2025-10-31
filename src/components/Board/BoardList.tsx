@@ -40,11 +40,7 @@ export const BoardList = () => {
   }, [dispatch, workspaceId]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="w-8 h-8 border-b-2 border-blue-600 rounded-full animate-spin xs:w-10 xs:h-10 sm:w-12 sm:h-12" />
-      </div>
-    );
+    return <div></div>;
   }
 
   return (
