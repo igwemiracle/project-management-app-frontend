@@ -83,28 +83,30 @@ export default function AccountFloatingContainer({
         onClick={() => setIsOpening(false)}
       />
       <FloatingContainer
-        className={`xs:-right-[59px] sm:-right-[62px] md:-right-[68px] lg:-right-4 top-[40px] w-[310px] transform transition-all duration-300 ease-in-out ${
-          isOpening
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-3 pointer-events-none"
-        }`}
         ref={menuRef}
+        className={`xs:-right-[57px] lg:-right-4 top-[42px] xs:w-[250px] w-[310px] z-50 fixed transform transition-transform duration-500 ease-in-out ${
+          isOpening ? "translate-x-0 opacity-100" : "translate-x-5 opacity-0"
+        }`}
       >
-        <div className="w-full px-4 pt-8 space-y-3 text-gray-200 shadow-lg rounded-b-xl bg-[#1D2125]">
+        <div className="w-full px-4 py-6 space-y-3 text-gray-200 shadow-lg rounded-b-xl bg-[#1D2125]">
           <div>
-            <h2 className="mb-3 text-sm font-semibold text-gray-400">
+            <h2 className="mb-3 text-[12px] lg:text-sm font-semibold text-gray-400">
               ACCOUNT
             </h2>
             {user && (
-              <div className="flex items-center gap-3 mb-2">
-                <UserAvatar user={flatUser} />
+              <div className="flex items-center gap-2 mb-2">
+                <UserAvatar className="xs:size-7 text-[12px]" user={flatUser} />
                 <div>
-                  <p className="font-medium">{flatUser?.fullName}</p>
-                  <p className="text-sm text-gray-400">{flatUser?.email}</p>
+                  <p className="font-medium xs:text-[12px] lg:text-sm">
+                    {flatUser?.fullName}
+                  </p>
+                  <p className="xs:text-[11px] lg:text-sm text-gray-400">
+                    {flatUser?.email}
+                  </p>
                 </div>
               </div>
             )}
-            <ul className="">
+            <ul className="text-[14px]">
               <li
                 onClick={() => navigate("/switch-accounts")}
                 className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer transition-colors duration-200"
@@ -120,10 +122,10 @@ export default function AccountFloatingContainer({
           <hr className="border-gray-700" />
 
           <div>
-            <h2 className="mb-3 text-sm font-semibold text-gray-400">
+            <h2 className="mb-3 xs:text-[12px] lg:text-sm font-semibold text-gray-400">
               PLANORA
             </h2>
-            <ul>
+            <ul className="text-[14px]">
               <li className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer">
                 Profile and visibility
               </li>
@@ -153,12 +155,12 @@ export default function AccountFloatingContainer({
             <span>
               <Users size={18} />
             </span>
-            <span>Create Workspace</span>
+            <span className="text-[14px]">Create Workspace</span>
           </div>
 
           <hr className="border-gray-700" />
 
-          <ul className="">
+          <ul className="text-[14px]">
             <li className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer">
               Help
             </li>
@@ -173,7 +175,7 @@ export default function AccountFloatingContainer({
             onClick={handleLogout}
             className="hover:bg-[#34363a] px-3 py-2 rounded-lg cursor-pointer flex items-baseline"
           >
-            <p className="">Log out</p>
+            <p className="text-[14px]">Log out</p>
           </div>
         </div>
       </FloatingContainer>

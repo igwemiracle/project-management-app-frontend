@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchBoards } from "../../store/slices/boardSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "../../context/ModalContext";
+import { api } from "../../services/api";
 
 export const BoardList = () => {
   const { workspaceId } = useParams<{ workspaceId: string }>();
@@ -14,7 +15,17 @@ export const BoardList = () => {
   const navigate = useNavigate();
   const { openModal } = useModal();
 
-  const handleOnSelectBoard = (boardId: string) => {
+  // const handleOnSelectBoard = (boardId: string) => {
+  //   navigate(`/boards/${boardId}`);
+  // };
+  const handleOnSelectBoard = async (boardId: string) => {
+    try {
+      // Record that the user viewed this board
+      await api.recentlyViewedBoards.addView(boardId);
+    } catch (error) {
+      console.error("Failed to record board view:", error);
+    }
+    // Navigate to board details page
     navigate(`/boards/${boardId}`);
   };
 

@@ -48,7 +48,7 @@ export default function CreateMenu({ closeMenu }: CreateMenuProps) {
   ];
 
   return (
-    <FloatingContainer className="top-12 w-[320px]" ref={menuRef}>
+    <FloatingContainer className="top-12 w-[320px] bg-[#2c2f33]" ref={menuRef}>
       {items.map((item, i) => (
         <div
           key={i}
@@ -68,6 +68,7 @@ export default function CreateMenu({ closeMenu }: CreateMenuProps) {
       {/* ✅ Nested FloatingContainer */}
       {showBoardForm && (
         <CreateBoardForm
+          className="bg-[#2c2f33] w-full text-white"
           onBack={() => {
             setShowBoardForm(false);
             setShowMenu(true);

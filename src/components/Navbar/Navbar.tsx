@@ -4,7 +4,6 @@ import {
   HelpCircle,
   Megaphone,
   WorkflowIcon,
-  User,
   Menu
 } from "lucide-react";
 import { IconButton } from "../UI/IconButton";
@@ -47,10 +46,10 @@ export default function Navbar() {
         {/* Create Button */}
         <div>
           <button
-            onClick={() => setShowCreateMenu((prev) => !prev)}
+            // onClick={() => setShowCreateMenu((prev) => !prev)}
             className="xs:hidden lg:block bg-blue-500 hover:bg-blue-600 text-sm text-gray-800 rounded-md px-3 py-[6px]"
           >
-            Create
+            Search
           </button>
 
           {showCreateMenu && (

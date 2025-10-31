@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useParams } from "react-router-dom";
 import { fetchBoards } from "../../store/slices/boardSlice";
+import { IconButton } from "../UI/IconButton";
 
 interface CreateBoardFormProps {
   onBack?: () => void;
@@ -15,12 +16,14 @@ interface CreateBoardFormProps {
     workspaceName: string;
     visibility: string;
   }) => void;
+  className?: string;
 }
 
 export default function CreateBoardForm({
   onBack = () => {},
   onClose = () => {},
-  onCreate
+  onCreate,
+  className
 }: CreateBoardFormProps) {
   const dispatch = useAppDispatch();
 
@@ -74,24 +77,32 @@ export default function CreateBoardForm({
   const isFormValid = formData.title && selectedWorkspace && selectedVisibility;
 
   return (
-    <FloatingContainer className="w-[320px] text-white bg-[#1D2125] p-4 rounded-lg shadow-lg">
+    <FloatingContainer
+      className={`text-white p-4 rounded-lg shadow-lg ${className}`}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between w-full mb-4">
-        <ChevronLeft
-          className="cursor-pointer hover:text-gray-400"
-          onClick={(e) => {
-            e.stopPropagation();
-            onBack();
-          }}
-        />
-        <h4 className="text-[15px] font-semibold">Create board</h4>
-        <X
-          className="cursor-pointer hover:text-gray-400"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClose();
-          }}
-        />
+      <div className="flex items-center justify-between w-full mb-4 text-gray-700">
+        <IconButton className="hover:bg-gray-200">
+          <ChevronLeft
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              onBack();
+            }}
+          />
+        </IconButton>
+        <h4 className="text-[15px] text-gray-700 font-semibold">
+          Create board
+        </h4>
+        <IconButton className="hover:bg-gray-200">
+          <X
+            className="text-gray-700"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+          />
+        </IconButton>
       </div>
 
       {/* Form */}
@@ -102,7 +113,7 @@ export default function CreateBoardForm({
       >
         {/* Board Name */}
         <div>
-          <label className="block mb-1 text-sm text-gray-300">
+          <label className="block mb-1 text-sm text-gray-800">
             Board title
           </label>
           <input
@@ -113,15 +124,15 @@ export default function CreateBoardForm({
               setFormData({ ...formData, title: e.target.value })
             }
             placeholder="My Awesome Board"
-            className="w-full bg-[#2C2F33] border border-[#3A3F44] rounded-md px-3 py-2 text-sm text-gray-200 placeholder-gray-400 focus:outline-none focus:border-blue-500"
+            className="w-full px-3 py-2 text-sm text-gray-200 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         {/* Workspace */}
         <div className="relative">
-          <label className="block mb-1 text-sm text-gray-300">Workspace</label>
+          <label className="block mb-1 text-sm text-gray-800">Workspace</label>
           <div
-            className="flex items-center bg-[#2C2F33] border border-[#3A3F44] rounded-md px-3 py-2 cursor-pointer"
+            className="flex items-center px-3 py-2 border border-gray-300 rounded-md cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               setShowWorkspaceDropdown((prev) => !prev);
@@ -168,9 +179,9 @@ export default function CreateBoardForm({
 
         {/* Visibility */}
         <div className="relative">
-          <label className="block mb-1 text-sm text-gray-300">Visibility</label>
+          <label className="block mb-1 text-sm text-gray-800">Visibility</label>
           <div
-            className="flex items-center bg-[#2C2F33] border border-[#3A3F44] rounded-md px-3 py-2 cursor-pointer"
+            className="flex items-center px-3 py-2 border border-gray-300 rounded-md cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               setShowVisibilityDropdown((prev) => !prev);

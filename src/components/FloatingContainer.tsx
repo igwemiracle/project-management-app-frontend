@@ -13,7 +13,7 @@ const FloatingContainer = forwardRef<HTMLDivElement, FloatingContainerProps>(
       <div
         ref={ref}
         className={clsx(
-          "absolute bg-[#2C2F33] z-50 rounded-b-lg text-slate-300 space-y-2",
+          "absolute z-50 rounded-b-lg text-slate-300 space-y-2 w-72 shadow-up-down",
           "flex flex-col items-start text-left",
           className
         )}

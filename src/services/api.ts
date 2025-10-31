@@ -11,7 +11,7 @@ export const api = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
-        credentials: "include", // ✅ allow cookies
+        credentials: "include",
       });
       return response.json();
     },
@@ -116,7 +116,23 @@ export const api = {
       return data.accounts;
 
     },
+  },
 
+  recentlyViewedBoards: {
+    getAll: async () => {
+      const response = await fetch(`${API_BASE_URL}/recently-viewed`, {
+        method: "GET",
+        credentials: "include",
+      });
+      return response.json();
+    },
+    addView: async (boardId: string) => {
+      const response = await fetch(`${API_BASE_URL}/recently-viewed/${boardId}`, {
+        method: "POST",
+        credentials: "include",
+      });
+      return response.json();
+    },
   },
 
   workspaces: {
@@ -237,6 +253,7 @@ export const api = {
       return response.json();
     },
   },
+
   cards: {
     getAll: async (boardId: string) => {
       const response = await fetch(`${API_BASE_URL}/cards?board=${boardId}`, {
@@ -278,6 +295,7 @@ export const api = {
       return response.json();
     },
   },
+
   comments: {
     getAll: async (cardId: string) => {
       const response = await fetch(`${API_BASE_URL}/comments?card=${cardId}`, {
@@ -312,6 +330,7 @@ export const api = {
       return response.json();
     },
   },
+
   activityLogs: {
     getAll: async (filters: { workspace?: string; board?: string }) => {
       const params = new URLSearchParams();

@@ -5,6 +5,7 @@ import { Board, List, Card } from '../../types';
 interface BoardState {
   boards: Board[];
   currentBoard: Board | null;
+  recentBoards: Board[];
   lists: List[];
   cards: Card[];
   loading: boolean;
@@ -30,6 +31,7 @@ const initialState: BoardState = {
   cards: [],
   loading: false,
   error: null,
+  recentBoards: [],
 };
 
 export const fetchBoards = createAsyncThunk<Board[], string>(
@@ -63,6 +65,19 @@ export const fetchBoard = createAsyncThunk('boards/fetchOne', async (id: string)
   const response = await api.boards.getById(id);
   return response;
 });
+
+export const fetchRecentlyViewedBoards = createAsyncThunk<Board[]>(
+  "boards/fetchRecentlyViewed",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.recentlyViewedBoards.getAll();
+      return response.boards;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
 
 export const fetchBoardData = createAsyncThunk<
   { board: Board; lists: List[]; cards: Card[] },
@@ -198,6 +213,7 @@ const boardSlice = createSlice({
       }
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchBoards.pending, (state) => {
@@ -229,6 +245,20 @@ const boardSlice = createSlice({
         state.loading = false;
       })
 
+      // ✅ FETCH RECENTLY VIEWED BOARDS
+      .addCase(fetchRecentlyViewedBoards.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchRecentlyViewedBoards.fulfilled, (state, action) => {
+        state.loading = false;
+        state.recentBoards = action.payload;
+      })
+      .addCase(fetchRecentlyViewedBoards.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // ✅ LIST
       .addCase(createList.fulfilled, (state, action: PayloadAction<List>) => {
         state.lists.push(action.payload);
       })
