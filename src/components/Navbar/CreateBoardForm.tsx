@@ -82,7 +82,7 @@ export default function CreateBoardForm({
     >
       {/* Header */}
       <div className="flex items-center justify-between w-full mb-4 text-gray-700">
-        <IconButton className="hover:bg-gray-200">
+        {/* <IconButton className="hover:bg-gray-200">
           <ChevronLeft
             className="cursor-pointer"
             onClick={(e) => {
@@ -90,7 +90,8 @@ export default function CreateBoardForm({
               onBack();
             }}
           />
-        </IconButton>
+        </IconButton> */}
+        <div></div>
         <h4 className="text-[15px] text-gray-700 font-semibold">
           Create board
         </h4>
@@ -138,7 +139,7 @@ export default function CreateBoardForm({
               setShowWorkspaceDropdown((prev) => !prev);
             }}
           >
-            <span className="flex-1 text-sm text-gray-200">
+            <span className="flex-1 text-sm text-gray-800">
               {selectedWorkspace
                 ? selectedWorkspace
                 : workspaces?.length > 0
@@ -187,7 +188,7 @@ export default function CreateBoardForm({
               setShowVisibilityDropdown((prev) => !prev);
             }}
           >
-            <span className="flex-1 text-sm text-gray-200">
+            <span className="flex-1 text-sm text-gray-800">
               {selectedVisibility || "Select visibility"}
             </span>
             <ChevronDown size={16} className="text-gray-400" />
