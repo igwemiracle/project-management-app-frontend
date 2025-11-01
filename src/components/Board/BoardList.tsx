@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Plus, Layout, ArrowLeft, Star } from "lucide-react";
+import { Plus, Layout, ArrowLeft } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchBoards } from "../../store/slices/boardSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "../../context/ModalContext";
 import { api } from "../../services/api";
+import BoardCard from "./BoardCard";
+import CardSkeleton from "../SkeletonLoader/CardSkeleton";
 
 export const BoardList = () => {
   const { workspaceId } = useParams<{ workspaceId: string }>();
@@ -15,10 +17,7 @@ export const BoardList = () => {
   const navigate = useNavigate();
   const { openModal } = useModal();
 
-  // const handleOnSelectBoard = (boardId: string) => {
-  //   navigate(`/boards/${boardId}`);
-  // };
-  const handleOnSelectBoard = async (boardId: string) => {
+  const handleSelect = async (boardId: string) => {
     try {
       // Record that the user viewed this board
       await api.recentlyViewedBoards.addView(boardId);
@@ -38,10 +37,6 @@ export const BoardList = () => {
       dispatch(fetchBoards(workspaceId));
     }
   }, [dispatch, workspaceId]);
-
-  if (loading) {
-    return <div></div>;
-  }
 
   return (
     <div className="min-h-screen px-3 py-4 xs:px-4 xs:py-6 sm:p-6 md:p-8 bg-gradient-to-br from-slate-50 to-slate-100">
@@ -80,8 +75,13 @@ export const BoardList = () => {
           </motion.button>
         </div>
 
-        {/* Empty State */}
-        {!boards || boards.length === 0 ? (
+        {loading ? (
+          <div className="grid xl:grid-cols-4 xl:gap-x-1 lg:grid-cols-3 xs:grid-cols-1 xs:gap-y-3 xxs:grid-cols-2 sm:grid-cols-2 xs:gap-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <CardSkeleton key={i} />
+            ))}
+          </div>
+        ) : !boards || boards.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -94,54 +94,19 @@ export const BoardList = () => {
             <p className="mb-4 text-sm text-gray-500 xs:text-base xs:mb-6">
               Create your first board to start organizing tasks
             </p>
-            <button
-              onClick={() => openModal("board", { workspaceId })}
-              className="w-full px-6 py-3 text-sm text-white transition bg-blue-600 rounded-lg hover:bg-blue-700 xs:w-auto xs:text-base"
-            >
-              Create Board
-            </button>
           </motion.div>
         ) : (
           // Board Grid
-          <div className="grid grid-cols-1 gap-3 xs:gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4 lg:gap-6">
+          <div className="grid xl:grid-cols-4 xl:gap-x-1 lg:grid-cols-3 xs:grid-cols-1 xs:gap-y-3 xxs:grid-cols-2 sm:grid-cols-2 xs:gap-2">
             {boards.map((board, index) => (
-              <motion.div
-                key={board._id || `board-${index}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                onClick={() => handleOnSelectBoard(board._id)}
-                className="relative overflow-hidden transition-all bg-white border rounded-lg shadow-sm cursor-pointer xs:rounded-xl hover:shadow-lg hover:border-blue-500/20"
-              >
-                {/* Board Header */}
-                <div
-                  className="flex items-end p-4 h-28 xs:h-32 xs:p-5"
-                  style={{
-                    background: `linear-gradient(135deg, ${
-                      board.color || "#3B82F6"
-                    }, ${board.color || "#2563EB"})`
-                  }}
-                >
-                  <h3 className="text-lg font-semibold text-white xs:text-xl">
-                    {board.title}
-                  </h3>
-                </div>
-
-                {/* Board Body */}
-                <div className="p-3 xs:p-4">
-                  <p className="py-2 text-xs text-gray-600 line-clamp-2 xs:text-sm">
-                    {board.description || ""}
-                  </p>
-                </div>
-
-                {/* Favorite Icon */}
-                {board.isFavorite && (
-                  <div className="absolute top-2 right-2 xs:top-3 xs:right-3">
-                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 xs:w-5 xs:h-5" />
-                  </div>
-                )}
-              </motion.div>
+              <BoardCard
+                key={board._id}
+                board={board}
+                index={index}
+                onClick={handleSelect}
+                animate={false}
+                showFavorite={true}
+              />
             ))}
           </div>
         )}

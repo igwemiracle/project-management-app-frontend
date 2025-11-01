@@ -75,12 +75,6 @@ export const WorkspaceList = () => {
             <p className="mb-4 text-sm xs:text-base xs:mb-6 text-muted-foreground">
               Create your first workspace to get started
             </p>
-            <button
-              onClick={() => openModal("workspace")}
-              className="w-full px-6 py-3 text-sm xs:w-auto xs:text-base"
-            >
-              Create Workspace
-            </button>
           </motion.div>
         ) : (
           // ✅ Actual Workspaces Grid
