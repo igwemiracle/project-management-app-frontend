@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchWorkspaces } from "../../store/slices/workspaceSlice";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/ModalContext";
-import CreateBoardForm from "../Navbar/CreateBoardForm";
+import CreateBoardForm from "../Board/CreateBoardForm";
 import { createBoard } from "../../store/slices/boardSlice";
 import WorkspaceSkeleton from "../SkeletonLoader/WorkspaceSkeleton";
 

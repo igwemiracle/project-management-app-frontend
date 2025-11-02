@@ -7,7 +7,7 @@ import {
   Menu
 } from "lucide-react";
 import { IconButton } from "../UI/IconButton";
-import CreateMenu from "./CreateMenu";
+import CreateMenu from "../Board/CreateMenu";
 import { useState } from "react";
 import AccountFloatingContainer from "./AccountFloatingContainer";
 import { Link } from "react-router-dom";

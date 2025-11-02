@@ -151,7 +151,7 @@ export default function CreateBoardForm({
 
           {showWorkspaceDropdown && (
             <div
-              className="absolute top-full left-0 mt-1 w-full bg-[#2C2F33] border border-[#3A3F44] rounded-md shadow-md z-50"
+              className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-200 rounded-md shadow-up-down z-50 py-2"
               onClick={(e) => e.stopPropagation()}
             >
               {workspaces.map((workspace) => {
@@ -164,10 +164,10 @@ export default function CreateBoardForm({
                       setSelectedWorkspace(workspace.name);
                       setShowWorkspaceDropdown(false);
                     }}
-                    className={`px-3 py-2 text-sm text-gray-200 cursor-pointer transition-colors ${
+                    className={`px-3 py-2 text-sm cursor-pointer transition-colors ${
                       isSelected
-                        ? "bg-blue-600 text-white" // Highlight selected workspace
-                        : "hover:bg-[#34363a]"
+                        ? "bg-blue-200 hover:bg-blue-200 border-2 border-r-0 border-y-0 border-l-blue-600 text-blue-600 outline-none"
+                        : "hover:bg-gray-100 text-gray-600"
                     }`}
                   >
                     {workspace.name}
@@ -179,7 +179,7 @@ export default function CreateBoardForm({
         </div>
 
         {/* Visibility */}
-        <div className="relative">
+        <div className="relative ">
           <label className="block mb-1 text-sm text-gray-800">Visibility</label>
           <div
             className="flex items-center px-3 py-2 border border-gray-300 rounded-md cursor-pointer"
@@ -196,22 +196,29 @@ export default function CreateBoardForm({
 
           {showVisibilityDropdown && (
             <div
-              className="absolute top-full left-0 mt-1 w-full bg-[#2C2F33] border border-[#3A3F44] rounded-md shadow-md z-50"
+              className="absolute top-full left-0 mt-2 w-full bg-white rounded-md shadow-up-down z-50 border border-gray-200 cursor-pointer py-2"
               onClick={(e) => e.stopPropagation()}
             >
-              {["Private", "Workspace", "Public"].map((option) => (
-                <div
-                  key={option}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedVisibility(option);
-                    setShowVisibilityDropdown(false);
-                  }}
-                  className="px-3 py-2 text-sm text-gray-200 hover:bg-[#34363a] cursor-pointer"
-                >
-                  {option}
-                </div>
-              ))}
+              {["Private", "Workspace", "Public"].map((option) => {
+                return (
+                  <div
+                    key={option}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedVisibility(option);
+                      setShowVisibilityDropdown(false);
+                    }}
+                    className={`px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer ${
+                      selectedVisibility === option
+                        ? "bg-blue-200 hover:bg-blue-200 border-2 border-r-0 border-y-0 border-l-blue-600 text-blue-600 outline-none"
+                        : "hover:bg-[#34363a] text-gray-600"
+                    }
+                    `}
+                  >
+                    {option}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -220,10 +227,10 @@ export default function CreateBoardForm({
         <button
           type="submit"
           disabled={!isFormValid}
-          className={`w-full py-2 text-sm font-medium text-white rounded-md transition-colors ${
+          className={`w-full py-2 text-sm font-medium rounded-md transition-colors ${
             isFormValid
-              ? "bg-blue-600 hover:bg-blue-500"
-              : "bg-gray-600 cursor-not-allowed"
+              ? "bg-blue-600 text-white hover:bg-blue-500"
+              : "bg-gray-100 text-gray-300 cursor-not-allowed"
           }`}
         >
           {loading ? "Creating board..." : "Create board"}
