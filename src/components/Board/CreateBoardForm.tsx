@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useParams } from "react-router-dom";
 import { fetchBoards } from "../../store/slices/boardSlice";
 import { IconButton } from "../UI/IconButton";
+import VisibilityDropdown from "./VisibilityDropdown";
 
 interface CreateBoardFormProps {
   onBack?: () => void;
@@ -36,9 +37,8 @@ export default function CreateBoardForm({
   const [selectedWorkspace, setSelectedWorkspace] = useState<string | null>(
     null
   );
-  const [selectedVisibility, setSelectedVisibility] = useState<string | null>(
-    null
-  );
+  const [selectedVisibility, setSelectedVisibility] = useState<string>("");
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -195,31 +195,11 @@ export default function CreateBoardForm({
           </div>
 
           {showVisibilityDropdown && (
-            <div
-              className="absolute top-full left-0 mt-2 w-full bg-white rounded-md shadow-up-down z-50 border border-gray-200 cursor-pointer py-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {["Private", "Workspace", "Public"].map((option) => {
-                return (
-                  <div
-                    key={option}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedVisibility(option);
-                      setShowVisibilityDropdown(false);
-                    }}
-                    className={`px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer ${
-                      selectedVisibility === option
-                        ? "bg-blue-200 hover:bg-blue-200 border-2 border-r-0 border-y-0 border-l-blue-600 text-blue-600 outline-none"
-                        : "hover:bg-[#34363a] text-gray-600"
-                    }
-                    `}
-                  >
-                    {option}
-                  </div>
-                );
-              })}
-            </div>
+            <VisibilityDropdown
+              selectedVisibility={selectedVisibility}
+              setSelectedVisibility={setSelectedVisibility}
+              setShowVisibilityDropdown={setShowVisibilityDropdown}
+            />
           )}
         </div>
 
