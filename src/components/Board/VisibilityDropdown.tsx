@@ -10,7 +10,7 @@ const visibilityOptions = [
   {
     title: "Workspace",
     description:
-      "All members of the Trello Workspace can see and edit this board.",
+      "All members of the Planora Workspace can see and edit this board.",
     icon: Users
   },
   {
