@@ -4,7 +4,8 @@ import {
   HelpCircle,
   Megaphone,
   WorkflowIcon,
-  Menu
+  Menu,
+  MoreHorizontal
 } from "lucide-react";
 import { IconButton } from "../UI/IconButton";
 import CreateMenu from "../Board/CreateMenu";
@@ -74,7 +75,7 @@ export default function Navbar() {
         </div>
 
         {/* Account Button - Always visible */}
-        <div className="relative">
+        {/* <div className="">
           <IconButton
             className="-ml-3 cursor-pointer"
             onClick={() => setShowAccountMenu((prev) => !prev)}
@@ -89,14 +90,14 @@ export default function Navbar() {
               closeMenu={() => setShowAccountMenu(false)}
             />
           )}
-        </div>
+        </div> */}
 
         {/* Mobile Menu Button - Visible below lg */}
         <button
           onClick={() => setShowMobileMenu(true)}
           className="lg:hidden p-1.5 sm:p-2 hover:bg-[#2C2F33] transition-colors  rounded-md"
         >
-          <Menu
+          <MoreHorizontal
             size={24}
             className="text-gray-300 w-6 h-6 sm:w-5 sm:h-5 xs:text-[10px] sm:text-[8px] transition"
           />

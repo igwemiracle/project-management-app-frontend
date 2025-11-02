@@ -1,4 +1,24 @@
-import { X, Search, Megaphone, Bell, HelpCircle } from "lucide-react";
+import {
+  X,
+  Search,
+  Megaphone,
+  Bell,
+  HelpCircle,
+  Info,
+  LogOut
+} from "lucide-react";
+import { IconButton } from "../UI/IconButton";
+import UserAvatar from "../Auth/UserAvatar";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useState } from "react";
+import AccountFloatingContainer from "./AccountFloatingContainer";
+import {
+  getStoredAccounts,
+  removeAccountFromStorage,
+  STORAGE_KEY
+} from "../../utils/storage";
+import { getProfile, logout, logoutUser } from "../../store/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -6,11 +26,46 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const { user } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      const { accounts, currentAccount } = getStoredAccounts();
+
+      // Normalize current account id
+      const normalizeId = (acc: any) =>
+        acc?._id || acc?.id || acc?.user?.id || acc?.user?._id;
+
+      if (accounts.length > 1) {
+        const curId = normalizeId(currentAccount);
+        if (curId) {
+          removeAccountFromStorage(curId.toString());
+        }
+
+        try {
+          await dispatch(getProfile()).unwrap();
+        } catch (e) {
+          console.warn("getProfile after local removal failed:", e);
+        }
+        navigate("/switch-accounts");
+      } else {
+        await dispatch(logoutUser()).unwrap();
+        localStorage.removeItem(STORAGE_KEY);
+        dispatch(logout());
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
   return (
     <>
       {/* Backdrop with fade effect */}
       <div
-        className={`fixed inset-0 z-40 bg-black/50 lg:hidden transition-opacity duration-500 ease-in-out ${
+        className={`fixed inset-0 z-20 bg-black/50 lg:hidden transition-opacity duration-500 ease-in-out ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         onClick={onClose}
@@ -18,46 +73,64 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
       {/* Slide-in Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-[#1D2125] z-50 shadow-2xl lg:hidden transform transition-transform duration-500 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+        className={`absolute top-[48px] rounded-b-xl right-0 w-64 bg-white z-30 shadow-2xl transform transition-transform duration-500 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-[100%]"
         }`}
+        style={{ willChange: "transform" }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#3A3F44]">
-          <span className="text-sm font-semibold text-gray-200">Menu</span>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-[#2C2F33] rounded-md transition-colors"
-          >
-            <X size={20} className="text-gray-300" />
-          </button>
-        </div>
-
-        {/* Search (Mobile) */}
-        <div className="p-4">
-          <div className="flex items-center bg-[#2C2F33] rounded-md px-3 py-2 border border-[#3A3F44]">
-            <Search size={16} className="mr-2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-full text-sm text-gray-300 placeholder-gray-400 bg-transparent focus:outline-none"
-            />
-          </div>
+        <div className="flex items-center justify-between gap-3 p-4 border-b border-gray-200">
+          {/* Search (Mobile) */}
+          <input
+            type="text"
+            placeholder="Search"
+            className="w-full text-sm rounded-[4px] px-3 border border-gray-600 text-gray-800 py-[6px] placeholder-gray-600 bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <IconButton onClick={onClose} className="hover:bg-gray-100">
+            <Info size={20} className="text-gray-800" />
+          </IconButton>
         </div>
 
         {/* Menu Items */}
-        <div className="p-4 space-y-2">
-          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-[#2C2F33] transition-colors text-left">
-            <Megaphone size={18} className="text-gray-300" />
-            <span className="text-sm text-gray-200">Announcements</span>
+        <div className="p-4 space-y-2 ">
+          <div className="">
+            <button
+              onClick={() => setShowAccountMenu((prev) => !prev)}
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-left"
+            >
+              {user && (
+                <UserAvatar
+                  className="xs:size-5 xxs:size-6 text-[10px]"
+                  user={user}
+                />
+              )}
+              <span className="text-sm text-gray-800">Account</span>
+            </button>
+            {showAccountMenu && (
+              <AccountFloatingContainer
+                closeMenu={() => setShowAccountMenu(false)}
+              />
+            )}
+          </div>
+          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-left">
+            <Megaphone size={18} className="text-gray-900" />
+            <span className="text-sm text-gray-800">Announcements</span>
           </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-[#2C2F33] transition-colors text-left">
-            <Bell size={18} className="text-gray-300" />
-            <span className="text-sm text-gray-200">Notifications</span>
+          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-left">
+            <Bell size={18} className="text-gray-900" />
+            <span className="text-sm text-gray-800">Notifications</span>
           </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-[#2C2F33] transition-colors text-left">
-            <HelpCircle size={18} className="text-gray-300" />
-            <span className="text-sm text-gray-200">Help</span>
+          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-left">
+            <HelpCircle size={18} className="text-gray-900" />
+            <span className="text-sm text-gray-800">Help</span>
+          </button>
+          <hr className="mt-5 text-gray-200" />
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-left"
+          >
+            <LogOut size={18} className="text-gray-900" />
+            <span className="text-sm text-gray-800">Log out</span>
           </button>
         </div>
       </div>

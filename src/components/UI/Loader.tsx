@@ -12,7 +12,7 @@ const Loader = () => {
           duration: 1.2
         }}
       >
-        <Workflow className="w-14 h-14 text-blue-500" />
+        <Workflow className="w-10 h-10 text-blue-500" />
       </motion.div>
     </div>
   );
