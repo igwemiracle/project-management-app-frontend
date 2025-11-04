@@ -11,16 +11,14 @@ import {
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchWorkspaces } from "../../store/slices/workspaceSlice";
 import { useNavigate } from "react-router-dom";
-import { useModal } from "../../context/ModalContext";
-import CreateBoardForm from "../Board/CreateBoardForm";
 import { createBoard } from "../../store/slices/boardSlice";
 import WorkspaceSkeleton from "../SkeletonLoader/WorkspaceSkeleton";
+import CreateBoardForm from "../Board/CreateBoardForm";
 
 export const WorkspaceList = () => {
   const dispatch = useAppDispatch();
   const { workspaces, loading } = useAppSelector((state) => state.workspaces);
   const navigate = useNavigate();
-  const { openModal } = useModal();
 
   // Track which workspace has its form open
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string | null>(
@@ -43,7 +41,7 @@ export const WorkspaceList = () => {
   ];
 
   return (
-    <div className="min-h-screen py-4 xs:py-6 sm:py-6 md:py-8 bg-gradient-to-br from-[hsl(var(--workspace-gradient-from))] to-[hsl(var(--workspace-gradient-to))]">
+    <div className="py-4 xs:py-6 sm:py-6 md:py-8 bg-gradient-to-br from-[hsl(var(--workspace-gradient-from))] to-[hsl(var(--workspace-gradient-to))]">
       {/* Header */}
       <div className="w-full">
         <div className="flex flex-col gap-3 mb-4 xs:gap-4 xs:mb-6 sm:flex-row sm:items-center sm:justify-between sm:mb-8">
@@ -115,7 +113,7 @@ export const WorkspaceList = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                     onClick={() => setSelectedWorkspaceId(workspace._id)}
-                    className="relative flex items-center justify-center h-40 p-4 text-gray-600 transition-all bg-gray-100 border rounded-lg shadow-sm cursor-pointer bg-card border-border xs:p-5 sm:p-6 xs:rounded-xl hover:shadow-lg hover:border-primary/20"
+                    className="relative flex items-center justify-center h-40 p-4 text-gray-600 transition-all bg-gray-100 border rounded-lg shadow-sm cursor-pointer bg-card border-border xs:p-5 sm:p-6 xs:rounded-xl hover:shadow-lg hover:border-primary/20 xs:min-w-[15rem] xxs:max-w-[9rem] sm:max-w-full"
                   >
                     Create new board
                   </motion.div>
@@ -131,7 +129,7 @@ export const WorkspaceList = () => {
                         className="absolute inset-0 z-20 flex items-center justify-center rounded-lg shadow-xl bg-white/100 h-96 backdrop-blur-sm"
                       >
                         <CreateBoardForm
-                          className="w-full h-full max-w-md p-4"
+                          className="w-full h-full max-w-md p-4 rounded-lg shadow-lg"
                           onClose={() => setSelectedWorkspaceId(null)}
                           onCreate={async (data) => {
                             try {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import FloatingContainer from "../FloatingContainer";
 import { IconButton } from "../UI/IconButton";
-import { CircuitBoard, LayoutTemplate } from "lucide-react";
+import { Layout, LayoutTemplate } from "lucide-react";
 import CreateBoardForm from "./CreateBoardForm";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { createBoard } from "../../store/slices/boardSlice";
@@ -33,14 +33,14 @@ export default function CreateMenu({ closeMenu }: CreateMenuProps) {
 
   const items = [
     {
-      icon: <CircuitBoard size={18} className="text-gray-300" />,
+      icon: <Layout size={18} className="text-gray-800" />,
       title: "Create board",
       description:
         "A board is made up of cards ordered on lists. Use it to manage projects, track information, or organize anything.",
       hasSubmenu: true
     },
     {
-      icon: <LayoutTemplate size={18} className="text-gray-300" />,
+      icon: <LayoutTemplate size={18} className="text-gray-800" />,
       title: "Start with a template",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, nesciunt!"
@@ -48,27 +48,31 @@ export default function CreateMenu({ closeMenu }: CreateMenuProps) {
   ];
 
   return (
-    <FloatingContainer className="top-12 w-[320px] bg-[#2c2f33]" ref={menuRef}>
+    <FloatingContainer
+      className="w-[305px] bg-white xs:right-2 xxs:right-4 sm:right-40 lg:right-16 xl:right-8 2xl:right-[11rem] xs:top-[47px] rounded-b-lg"
+      ref={menuRef}
+    >
       {items.map((item, i) => (
         <div
           key={i}
           onClick={() => {
             if (item.hasSubmenu) setShowBoardForm(true);
           }}
-          className="hover:bg-[#34363a] w-full px-4 py-2 rounded-md transition-colors duration-200 cursor-pointer"
+          className="hover:bg-gray-100 w-full px-3 py-2 rounded-md transition-colors duration-200 cursor-pointer"
         >
           <div className="flex items-center space-x-2">
-            <IconButton className="hover:bg-[#35393d]">{item.icon}</IconButton>
-            <span>{item.title}</span>
+            <IconButton className="hover:bg-transparent text-gray-700">
+              {item.icon}
+            </IconButton>
+            <span className="text-gray-800">{item.title}</span>
           </div>
-          <p className="text-xs">{item.description}</p>
+          <p className="text-xs text-gray-800">{item.description}</p>
         </div>
       ))}
 
-      {/* ✅ Nested FloatingContainer */}
       {showBoardForm && (
         <CreateBoardForm
-          className="bg-[#2c2f33] w-full text-white"
+          className="bg-white w-full text-white p-4 rounded-b-lg -top-[7px]"
           onBack={() => {
             setShowBoardForm(false);
             setShowMenu(true);

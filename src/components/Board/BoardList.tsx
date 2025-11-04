@@ -19,7 +19,6 @@ export const BoardList = () => {
 
   const handleSelect = async (boardId: string) => {
     try {
-      // Record that the user viewed this board
       await api.recentlyViewedBoards.addView(boardId);
     } catch (error) {
       console.error("Failed to record board view:", error);

@@ -1,12 +1,4 @@
-import {
-  X,
-  Search,
-  Megaphone,
-  Bell,
-  HelpCircle,
-  Info,
-  LogOut
-} from "lucide-react";
+import { Megaphone, Bell, HelpCircle, Info, LogOut } from "lucide-react";
 import { IconButton } from "../UI/IconButton";
 import UserAvatar from "../Auth/UserAvatar";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -65,7 +57,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     <>
       {/* Backdrop with fade effect */}
       <div
-        className={`fixed inset-0 z-20 bg-black/50 lg:hidden transition-opacity duration-500 ease-in-out ${
+        className={`fixed inset-0 z-50  lg:hidden transition-opacity duration-500 ease-in-out ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         onClick={onClose}
@@ -73,7 +65,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
       {/* Slide-in Menu */}
       <div
-        className={`absolute top-[48px] rounded-b-xl right-0 w-64 bg-white z-30 shadow-2xl transform transition-transform duration-500 ease-in-out ${
+        className={`absolute top-[48px] rounded-xl right-0 w-64 bg-white z-50 shadow-up-down transform transition-transform duration-500 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-[100%]"
         }`}
         style={{ willChange: "transform" }}
@@ -108,6 +100,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </button>
             {showAccountMenu && (
               <AccountFloatingContainer
+                className="top-0 left-0 right-0 w-full"
                 closeMenu={() => setShowAccountMenu(false)}
               />
             )}

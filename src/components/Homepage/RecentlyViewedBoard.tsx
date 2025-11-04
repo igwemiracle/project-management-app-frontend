@@ -7,7 +7,7 @@ import { api } from "../../services/api";
 import BoardCard from "../Board/BoardCard";
 import CardSkeleton from "../SkeletonLoader/CardSkeleton";
 
-export default function RecentlyViewed() {
+export default function RecentlyViewedBoard() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { recentBoards, loading } = useAppSelector((state) => state.boards);
@@ -15,6 +15,8 @@ export default function RecentlyViewed() {
   useEffect(() => {
     dispatch(fetchRecentlyViewedBoards());
   }, [dispatch]);
+
+  // ✅ Close when clicking outside
 
   const handleSelect = async (boardId: string) => {
     try {
@@ -27,24 +29,31 @@ export default function RecentlyViewed() {
 
   return (
     <div className="">
-      <div className="">
-        <div className="flex items-center gap-2 mb-4">
-          <Clock size={20} />
-          <h1 className="text-lg font-bold leading-tight text-foreground">
-            Recently viewed
-          </h1>
+      {loading ? (
+        <div className="mt-12 grid 2xl:grid-cols-4 xl:grid-cols-3 xl:gap-x-3 lg:grid-cols-3 xs:grid-cols-1 xs:gap-y-3 xxs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xs:gap-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
         </div>
-
-        {loading ? (
-          <div className="grid xl:grid-cols-4 xl:gap-x-1 lg:grid-cols-3 xs:grid-cols-1 xs:gap-y-3 xxs:grid-cols-2 sm:grid-cols-2 xs:gap-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <CardSkeleton key={i} />
-            ))}
+      ) : recentBoards.length === 0 ? (
+        <>
+          <div className="flex items-center gap-2 mb-4">
+            <Clock size={20} />
+            <h1 className="text-lg font-bold leading-tight text-foreground">
+              Recently viewed
+            </h1>
           </div>
-        ) : recentBoards.length === 0 ? (
           <p className="text-gray-500">No recently viewed boards yet.</p>
-        ) : (
-          <div className="grid xl:grid-cols-4 xl:gap-x-1 lg:grid-cols-3 xs:grid-cols-1 xs:gap-y-3 xxs:grid-cols-2 sm:grid-cols-2 xs:gap-2">
+        </>
+      ) : (
+        <>
+          <div className="flex items-center gap-2 mb-4 mt-12">
+            <Clock size={20} />{" "}
+            <h1 className="text-lg font-bold leading-tight text-foreground">
+              Recently viewed{" "}
+            </h1>
+          </div>
+          <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 xl:gap-x-3 lg:grid-cols-3 xs:grid-cols-1 xs:gap-y-3 xxs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xs:gap-2">
             {recentBoards.map((board, index) => (
               <BoardCard
                 key={board._id}
@@ -56,8 +65,8 @@ export default function RecentlyViewed() {
               />
             ))}
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 }

@@ -16,10 +16,12 @@ import { IconButton } from "../UI/IconButton";
 interface CreateAccountMenuProps {
   closeMenu: () => void;
   onClose?: () => void;
+  className?: string;
 }
 
 export default function AccountFloatingContainer({
-  closeMenu
+  closeMenu,
+  className
 }: CreateAccountMenuProps) {
   const { user } = useAppSelector((state) => state.auth);
   const [isOpening, setIsOpening] = useState(false);
@@ -31,6 +33,18 @@ export default function AccountFloatingContainer({
   useEffect(() => {
     // Trigger open animation
     setTimeout(() => setIsOpening(true), 10);
+  }, [closeMenu]);
+
+  // ✅ Detect clicks outside of this container
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [closeMenu]);
 
   const handleLogout = async () => {
@@ -68,19 +82,19 @@ export default function AccountFloatingContainer({
 
   return (
     <>
-      {/* <div
-        className={`fixed inset-0 bg-black/50 lg:hidden transition-opacity duration-500 ease-in-out `}
-        onClick={() => setIsOpening(false)}
-      /> */}
       <FloatingContainer
         ref={menuRef}
-        className={`top-0 left-0 w-full h-full z-50 transform transition-transform duration-500 ease-in-out ${
-          isOpening ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`absolute z-50 shadow-lg transform transition-transform duration-500 ease-in-out w-72
+        ${isOpening ? "translate-x-0" : "translate-x-[100%]"} 
+        ${className}`}
       >
         <div className="w-full px-4 py-6 space-y-3 text-gray-200 shadow-lg rounded-b-xl bg-white">
           <IconButton className="hover:bg-gray-100 -ml-3">
-            <ArrowLeft size={18} className="text-black" onClick={closeMenu} />
+            <ArrowLeft
+              size={18}
+              className="text-gray-600"
+              onClick={closeMenu}
+            />
           </IconButton>
 
           <div>

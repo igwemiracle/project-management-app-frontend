@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const CardSkeleton = () => {
   return (
-    <motion.div className="relative overflow-hidden transition-all bg-white border rounded-lg shadow-sm lg:w-72 xs:rounded-xl animate-pulse">
+    <motion.div className="relative overflow-hidden transition-all bg-white border rounded-lg shadow-sm xs:w-full xxs:min-w-[10rem] xs:rounded-xl animate-pulse">
       {/* Header skeleton */}
       <div className="flex items-end bg-gray-200 rounded-t-lg lg:p-4 xs:h-16 xxs:h-18 lg:h-20 xs:p-2 md:h-20">
         <div className="w-1/2 h-3 bg-gray-300 rounded lg:h-5"></div>

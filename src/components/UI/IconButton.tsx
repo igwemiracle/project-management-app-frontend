@@ -13,7 +13,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
 }) => (
   <button
     onClick={onClick}
-    className={`p-2 rounded-md hover:bg-[#2C2F33] transition-colors duration-200 ${className}`}
+    className={`p-2 rounded-md hover:bg-gray-100 transition-colors duration-200 ${className}`}
   >
     {children}
   </button>

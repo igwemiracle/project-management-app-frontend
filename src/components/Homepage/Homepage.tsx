@@ -1,11 +1,11 @@
 import { WorkspaceList } from "../Workspace/WorkspaceList";
-import RecentlyViewed from "./RecentlyViewd";
+import RecentlyViewedBoard from "./RecentlyViewedBoard";
 
 export default function Homepage() {
   return (
-    <div className="w-full mx-auto my-6 max-w-7xl xs:w-[85%] xxs:w-[80%] lg:w-[90%] xl:w-[95%]">
+    <div className="mx-auto my-6 xs:w-[75%] xxs:w-[85%] lg:w-[80%] xl:w-[65%] 2xl:w-[60%]  ">
       {/* SHOW RECENTLY VIEWD BOARDS OR ACTIVITIES */}
-      <RecentlyViewed />
+      <RecentlyViewedBoard />
       <WorkspaceList />
     </div>
   );

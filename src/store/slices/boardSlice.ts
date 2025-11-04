@@ -49,11 +49,23 @@ export const fetchBoards = createAsyncThunk<Board[], string>(
 export const createBoard = createAsyncThunk(
   "boards/create",
   async (
-    data: { title: string; workspaceId: string; description?: string; color?: string },
+    data: { title: string; workspaceId: string; description?: string; color?: string; isFavorite?: boolean },
     { rejectWithValue }
   ) => {
     try {
       const response = await api.boards.create(data);
+      return response.board;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+export const toggleFavorite = createAsyncThunk(
+  "boards/toggleFavorite",
+  async ({ boardId, isFavorite }: { boardId: string; isFavorite: boolean }, { rejectWithValue }) => {
+    try {
+      const response = await api.boards.updateFavorite(boardId, isFavorite);
       return response.board;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || error.message);

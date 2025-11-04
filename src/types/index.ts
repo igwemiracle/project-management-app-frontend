@@ -51,7 +51,7 @@ export interface Board {
   description?: string;
   workspace: string;
   color?: string;
-  isFavorite: boolean;
+  isFavorite?: boolean;
   createdAt: string;
   updatedAt: string;
 }

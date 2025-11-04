@@ -185,7 +185,7 @@ export const api = {
       });
       return response.json();
     },
-    create: async (data: { title: string; workspaceId: string; description?: string; color?: string }) => {
+    create: async (data: { title: string; workspaceId: string; description?: string; color?: string; isFavorite?: boolean }) => {
       const response = await fetch(`${API_BASE_URL}/boards`, {
         method: "POST",
         headers: getAuthHeaders,
@@ -194,6 +194,16 @@ export const api = {
       });
       return response.json();
     },
+    updateFavorite: async (boardId: string, isFavorite: boolean) => {
+      const response = await fetch(`${API_BASE_URL}/boards/${boardId}`, {
+        method: "PATCH",
+        headers: getAuthHeaders,
+        credentials: "include",
+        body: JSON.stringify({ isFavorite }),
+      });
+      return response.json();
+    },
+
     getById: async (id: string) => {
       const response = await fetch(`${API_BASE_URL}/boards/${id}`, {
         method: "GET",

@@ -77,12 +77,10 @@ export default function CreateBoardForm({
   const isFormValid = formData.title && selectedWorkspace && selectedVisibility;
 
   return (
-    <FloatingContainer
-      className={`text-white p-4 rounded-lg shadow-lg ${className}`}
-    >
+    <FloatingContainer className={`text-white w-72  ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between w-full mb-4 text-gray-700">
-        {/* <IconButton className="hover:bg-gray-200">
+        <IconButton className="hover:bg-gray-200">
           <ChevronLeft
             className="cursor-pointer"
             onClick={(e) => {
@@ -90,7 +88,7 @@ export default function CreateBoardForm({
               onBack();
             }}
           />
-        </IconButton> */}
+        </IconButton>
         <div></div>
         <h4 className="text-[15px] text-gray-700 font-semibold">
           Create board
