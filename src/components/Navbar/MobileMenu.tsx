@@ -65,8 +65,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
       {/* Slide-in Menu */}
       <div
-        className={`absolute top-[48px] rounded-xl right-0 w-64 bg-white z-50 shadow-up-down transform transition-transform duration-500 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-[100%]"
+        className={`fixed top-[48px] right-0 w-64 bg-white z-50 shadow-up-down transform transition-transform duration-500 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{ willChange: "transform" }}
       >

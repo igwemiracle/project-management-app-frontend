@@ -12,11 +12,13 @@ import { Board } from "../../types";
 interface SearchDropdownProps {
   onClose: () => void;
   showFavorite?: boolean;
+  onClick: (boardId: string) => void;
 }
 
 export default function SearchDropdown({
   onClose,
-  showFavorite = true
+  showFavorite = true,
+  onClick
 }: SearchDropdownProps) {
   const { recentBoards, loading } = useAppSelector((state) => state.boards);
   const dispatch = useAppDispatch();
@@ -101,6 +103,10 @@ export default function SearchDropdown({
               <div className="flex flex-col gap-3">
                 {recentBoards.map((board, index) => (
                   <div
+                    onClick={() => {
+                      if (onClose) onClose(); // Close the modal/page
+                      if (onClick) onClick(board._id); // Redirect to the board page
+                    }}
                     key={board._id || index}
                     className="flex items-start justify-between gap-3 w-full pl-2 hover:bg-gray-100 rounded-md p-2 cursor-pointer"
                   >

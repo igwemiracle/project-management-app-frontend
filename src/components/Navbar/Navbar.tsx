@@ -8,25 +8,35 @@ import {
 } from "lucide-react";
 import { IconButton } from "../UI/IconButton";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
 import AccountFloatingContainer from "./AccountFloatingContainer";
 import UserAvatar from "../Auth/UserAvatar";
 import { useAppSelector } from "../../store/hooks";
 import CreateMenu from "../Board/CreateMenu";
 import SearchDropdown from "./SearchDropdown";
+import { api } from "../../services/api";
 
 export default function Navbar() {
   const { user } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
   const { recentBoards } = useAppSelector((state) => state.boards);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showCreateMenu, setShowCreateMenu] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
 
+  const handleSelect = async (boardId: string) => {
+    try {
+      await api.recentlyViewedBoards.addView(boardId);
+    } catch (error) {
+      console.error("Failed to record view:", error);
+    }
+    navigate(`/boards/${boardId}`);
+  };
   return (
     <>
-      <nav className="bg-white border border-b-gray-300 h-12 flex items-center justify-between px-4 text-white relative w-screen">
+      <nav className="bg-white border border-b-gray-300 h-12 flex items-center justify-between px-4 text-white relative">
         {/* Left Section - Logo */}
         <Link to={"/"} className="flex items-center space-x-2">
           <WorkflowIcon size={22} className="text-blue-600" />
@@ -56,6 +66,7 @@ export default function Navbar() {
             {showSearchDropdown &&
               recentBoards.map((board, index) => (
                 <SearchDropdown
+                  onClick={handleSelect}
                   key={board._id || index}
                   showFavorite={true}
                   onClose={() => setShowSearchDropdown(false)}

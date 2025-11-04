@@ -41,10 +41,7 @@ function AppContent() {
 
   if (!initialized) {
     // ✅ Wait until auth check completes before deciding
-    return (
-      <Loader />
-      // <div></div>
-    );
+    return <Loader />;
   }
 
   const isAuthRoute =

@@ -6,6 +6,7 @@ import { KanbanCard } from "./KanbanCard";
 import { ListActionModal } from "../List/ListActionModal";
 import { useAppSelector } from "../../store/hooks";
 import { COLORS } from "./CreateBoardModal";
+import Loader from "../UI/Loader";
 
 interface KanbanListProps {
   list: List;
@@ -85,6 +86,10 @@ export const KanbanList = ({
     setNewCardTitle("");
     setShowNewCard(false);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="flex-shrink-0 mx-auto w-80">

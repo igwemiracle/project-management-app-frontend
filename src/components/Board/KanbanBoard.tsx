@@ -11,6 +11,7 @@ import { KanbanList } from "./KanbanList";
 import { CardDetailModal } from "./CardDetailModal";
 import { Card } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../UI/Loader";
 
 export const KanbanBoard = () => {
   const dispatch = useAppDispatch();
@@ -82,13 +83,8 @@ export const KanbanBoard = () => {
     ? onlineUsers.filter((u) => u.boardId === boardId)
     : [];
 
-  // ✅ Show loader when data is being fetched
   if (loading && !currentBoard) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin" />
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
