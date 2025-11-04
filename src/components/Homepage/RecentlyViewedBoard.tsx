@@ -16,8 +16,6 @@ export default function RecentlyViewedBoard() {
     dispatch(fetchRecentlyViewedBoards());
   }, [dispatch]);
 
-  // ✅ Close when clicking outside
-
   const handleSelect = async (boardId: string) => {
     try {
       await api.recentlyViewedBoards.addView(boardId);

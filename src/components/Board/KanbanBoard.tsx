@@ -12,6 +12,7 @@ import { CardDetailModal } from "./CardDetailModal";
 import { Card } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../UI/Loader";
+import ListSkeleton from "../SkeletonLoader/ListSkeleton";
 
 export const KanbanBoard = () => {
   const dispatch = useAppDispatch();
@@ -83,8 +84,12 @@ export const KanbanBoard = () => {
     ? onlineUsers.filter((u) => u.boardId === boardId)
     : [];
 
-  if (loading && !currentBoard) {
+  if (loading) {
     return <Loader />;
+  }
+
+  if (!currentBoard) {
+    return <ListSkeleton />;
   }
 
   return (
