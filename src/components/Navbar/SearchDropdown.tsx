@@ -123,8 +123,11 @@ export default function SearchDropdown({
                         <p className="text-gray-800 font-medium text-base">
                           {board.title}
                         </p>
-                        <p className="text-gray-700 text-sm font-normal">
-                          Planora workspace
+                        {/* Display workspace title if available */}
+                        <p className="text-gray-700 text-xs font-normal">
+                          {typeof board.workspace === "object"
+                            ? board.workspace.name || "Personal Workspace"
+                            : "Personal Workspace"}
                         </p>
                       </div>
                     </div>

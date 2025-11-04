@@ -48,7 +48,7 @@ export default function RecentlyViewedBoard() {
           <div className="flex items-center gap-2 mb-4 mt-12">
             <Clock size={20} />{" "}
             <h1 className="text-lg font-bold leading-tight text-foreground">
-              Recently viewed{" "}
+              Recently viewed boards{" "}
             </h1>
           </div>
           <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 xl:gap-x-3 lg:grid-cols-3 xs:grid-cols-1 xs:gap-y-3 xxs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xs:gap-2">

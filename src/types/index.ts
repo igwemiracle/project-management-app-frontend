@@ -11,7 +11,7 @@ export interface User {
 
 export interface Workspace {
   _id: string;
-  title: string;
+  name: string;
   description: string;
   createdBy: string;
   members: Array<{
@@ -49,7 +49,7 @@ export interface Board {
   _id: string;
   title: string;
   description?: string;
-  workspace: string;
+  workspace: string | Workspace;
   color?: string;
   isFavorite?: boolean;
   createdAt: string;
