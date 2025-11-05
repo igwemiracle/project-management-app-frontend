@@ -82,7 +82,7 @@ const BoardCard = ({
             className={`w-5 h-5 cursor-pointer transition-colors ${
               isFavorite
                 ? "text-yellow-400 fill-yellow-400"
-                : "text-white fill-none"
+                : "text-white hover:text-yellow-400 fill-none"
             }`}
           />
         </motion.div>

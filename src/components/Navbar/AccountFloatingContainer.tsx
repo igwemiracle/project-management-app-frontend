@@ -105,10 +105,10 @@ export default function AccountFloatingContainer({
               <div className="flex items-center gap-2 mb-2">
                 <UserAvatar className="xs:size-7 text-[12px]" user={flatUser} />
                 <div>
-                  <p className="font-medium xs:text-[13px] text-gray-800 lg:text-sm">
+                  <p className="font-medium xs:text-[14px] text-gray-800 lg:text-sm">
                     {flatUser?.fullName}
                   </p>
-                  <p className="xs:text-[11px] lg:text-sm text-gray-700">
+                  <p className="xs:text-[12px] lg:text-sm text-gray-700">
                     {flatUser?.email}
                   </p>
                 </div>

@@ -57,7 +57,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     <>
       {/* Backdrop with fade effect */}
       <div
-        className={`fixed inset-0 z-50  lg:hidden transition-opacity duration-500 ease-in-out ${
+        className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-500 ease-in-out ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         onClick={onClose}

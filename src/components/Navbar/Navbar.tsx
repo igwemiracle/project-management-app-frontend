@@ -36,7 +36,7 @@ export default function Navbar() {
   };
   return (
     <>
-      <nav className="bg-white border border-b-gray-300 h-12 flex items-center justify-between px-4 text-white relative">
+      <nav className="bg-white border border-b-gray-300 h-12 flex items-center justify-between px-4 text-white fixed top-0 left-0 right-0 z-40">
         {/* Left Section - Logo */}
         <Link to={"/"} className="flex items-center space-x-2">
           <WorkflowIcon size={22} className="text-blue-600" />
