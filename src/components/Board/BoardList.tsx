@@ -42,7 +42,7 @@ export const BoardList = () => {
       <div className="w-full mx-auto max-w-7xl">
         {/* Header Section */}
         <div className="flex flex-col items-start gap-3 mb-6 xs:gap-4 xs:mb-8 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center w-full gap-3 sm:w-auto">
+          <div className="mt-12 flex items-center w-full gap-3 sm:w-auto">
             {/* Back Button */}
             <button
               onClick={handleOnBack}

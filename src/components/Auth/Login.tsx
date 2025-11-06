@@ -34,7 +34,7 @@ export const Login = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="xs:w-full sm:w-[50%] lg:w-[40%] xl:w-[25%] px-6 md:shadow-up-down md:rounded-xl md:p-9"
+      className="xs:w-[85%] xxs:w-[75%] sm:w-[50%] lg:w-[40%] xl:w-[35%] md:shadow-up-down md:rounded-xl md:p-9"
     >
       <div className="mx-auto mb-2 space-y-4">
         <div className="flex items-start justify-center gap-2">
@@ -42,16 +42,16 @@ export const Login = () => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200 }}
-            className="inline-flex items-center justify-center xs:size-12 sm:size-[44px] lg:size-[40px] bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl"
+            className="inline-flex items-center justify-center xs:size-10 sm:size-[40px] lg:size-[40px] bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg"
           >
-            <Workflow className="text-white lg:size-6 xs:size-7" />
+            <Workflow className="text-white lg:size-6 xs:size-6" />
           </motion.div>
-          <p className="font-medium sm:font-normal sm:-mt-2 tracking-tight text-center text-gray-800 xs:text-[33px] sm:text-[36px]">
+          <p className="font-medium xs:-mt-1 tracking-tight text-center text-gray-700 xs:text-[28px] sm:text-[30px]">
             Planora
           </p>
         </div>
 
-        <p className="max-w-md mx-auto text-sm font-semibold leading-relaxed text-center text-gray-700 xs:text-base">
+        <p className="max-w-md mx-auto text-sm font-semibold leading-relaxed text-center text-gray-700">
           Log in to continue
         </p>
       </div>
@@ -69,7 +69,7 @@ export const Login = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="placeholder:text-sm w-full py-2 lg:py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="you@example.com"
             />
           </div>
@@ -87,7 +87,7 @@ export const Login = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="placeholder:text-sm w-full py-2 lg:py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your password"
             />
           </div>
@@ -108,13 +108,13 @@ export const Login = () => {
           whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={loading}
-          className="w-full py-3 font-semibold text-white transition rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-2 lg:py-3 font-semibold text-white transition rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? "Signing in..." : "Sign In"}
         </motion.button>
       </form>
 
-      <div className="flex items-center justify-center gap-2 mt-6 text-center">
+      <div className="flex items-center justify-center gap-2 mt-5 text-center text-sm">
         <Link to={"/reset-password"} className="text-blue-500 underline">
           Can't log in?{" "}
         </Link>
@@ -127,7 +127,7 @@ export const Login = () => {
         </Link>
       </div>
 
-      <hr className="mt-5 text-gray-600" />
+      <hr className="mt-4 text-gray-600" />
     </motion.div>
   );
 };
