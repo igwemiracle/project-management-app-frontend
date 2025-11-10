@@ -34,7 +34,7 @@ export const Login = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="xs:w-[85%] xxs:w-[75%] sm:w-[50%] lg:w-[40%] xl:w-[35%] md:shadow-up-down md:rounded-xl md:p-9"
+      className="xs:w-[85%] xxs:w-[75%] sm:w-[50%] lg:w-[40%] xl:w-[25%] md:shadow-up-down md:rounded-xl md:p-9"
     >
       <div className="mx-auto mb-2 space-y-4">
         <div className="flex items-start justify-center gap-2">
@@ -69,7 +69,7 @@ export const Login = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="placeholder:text-sm w-full py-2 lg:py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full py-2 pl-10 pr-4 transition border border-gray-300 rounded-lg placeholder:text-sm lg:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="you@example.com"
             />
           </div>
@@ -87,7 +87,7 @@ export const Login = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="placeholder:text-sm w-full py-2 lg:py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full py-2 pl-10 pr-4 transition border border-gray-300 rounded-lg placeholder:text-sm lg:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your password"
             />
           </div>
@@ -108,13 +108,13 @@ export const Login = () => {
           whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={loading}
-          className="w-full py-2 lg:py-3 font-semibold text-white transition rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-2 font-semibold text-white transition rounded-lg lg:py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? "Signing in..." : "Sign In"}
         </motion.button>
       </form>
 
-      <div className="flex items-center justify-center gap-2 mt-5 text-center text-sm">
+      <div className="flex items-center justify-center gap-2 mt-5 text-sm text-center">
         <Link to={"/reset-password"} className="text-blue-500 underline">
           Can't log in?{" "}
         </Link>
