@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { api } from "../../services/api";
 import { User } from "../../types";
-import { addAccountToStorage, getStoredAccounts, removeAccountFromStorage } from "../../utils/storage";
+
+interface LoginResponse {
+  user: User;
+}
 
 interface AuthState {
   user: User | null;
@@ -22,17 +25,12 @@ const initialState: AuthState = {
 };
 
 // ✅ REGISTER
-export const register = createAsyncThunk(
+export const register = createAsyncThunk<
+  LoginResponse,
+  { username: string; email: string; password: string; fullName: string }
+>(
   "auth/register",
-  async (
-    data: {
-      username: string,
-      email: string,
-      password: string,
-      fullName: string
-    },
-    { rejectWithValue }
-  ) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await api.auth.register(data);
 
@@ -42,28 +40,36 @@ export const register = createAsyncThunk(
       }
 
       return rejectWithValue(response.message || "Registration failed");
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || error.message || "Registration failed");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Registration failed");
     }
   }
 );
 
 // ✅ LOGIN
-export const login = createAsyncThunk(
+export const login = createAsyncThunk<
+  LoginResponse,
+  { email: string; password: string }
+>(
   "auth/login",
-  async (data: { email: string; password: string }, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await api.auth.login(data);
       return response;
-    } catch (error: any) {
-      // ensure error is string
-      return rejectWithValue(error?.message || "Invalid credentials");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Invalid credentials");
     }
   }
 );
 
 // ✅ GET PROFILE (verifies if cookie session is still valid)
-export const getProfile = createAsyncThunk(
+export const getProfile = createAsyncThunk<LoginResponse>(
   "auth/getProfile",
   async (_, { rejectWithValue }) => {
     try {
@@ -73,34 +79,43 @@ export const getProfile = createAsyncThunk(
         return response;
       }
       return rejectWithValue("No active session found");
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to get profile");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Failed to get profile");
     }
   }
 );
 
 // ✅ SWITCH ACCOUNT
-export const switchAccount = createAsyncThunk(
+export const switchAccount = createAsyncThunk<User, string>(
   "auth/switchAccount",
-  async (targetUserId: string, { rejectWithValue }) => {
+  async (targetUserId, { rejectWithValue }) => {
     try {
       const user = await api.users.SwitchAccount(targetUserId);
       return user;
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to switch account");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Failed to switch account");
     }
   }
 );
 
 // ✅ REMOVE CURRENT ACCOUNT
-export const removeAccount = createAsyncThunk(
+export const removeAccount = createAsyncThunk<string>(
   "auth/removeAccount",
   async (_, { rejectWithValue }) => {
     try {
       const message = await api.users.RemoveAccount();
       return message;
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to remove account");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Failed to remove account");
     }
   }
 );
@@ -113,8 +128,11 @@ export const logoutUser = createAsyncThunk<boolean, void, { rejectValue: string 
       const response = await api.auth.logout();
       if (response.success) return true;
       return rejectWithValue(response.message || "Logout failed");
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Logout failed");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Logout failed");
     }
   }
 );
@@ -140,7 +158,7 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(register.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase(register.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
         state.loading = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
@@ -155,17 +173,10 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase(login.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
         state.loading = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
-
-        // UPDATE LOCAL STORAGE
-        addAccountToStorage(action.payload);
-
-        // RELOAD STORED ACCOUNT INTO STATE
-        const { accounts } = getStoredAccounts();
-        state.ownedAccounts = accounts;
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
@@ -177,7 +188,7 @@ const authSlice = createSlice({
       .addCase(getProfile.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getProfile.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase(getProfile.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
         state.loading = false;
         state.user = action.payload.user || action.payload;
         state.isAuthenticated = true;
@@ -215,10 +226,6 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
-        addAccountToStorage(action.payload);
-        const { currentAccount, accounts } = getStoredAccounts();
-        state.user = currentAccount;
-        state.ownedAccounts = accounts;
         state.error = null;
       })
       .addCase(switchAccount.rejected, (state, action) => {
@@ -232,12 +239,9 @@ const authSlice = createSlice({
         state.error = null;
       })
 
-      .addCase(removeAccount.fulfilled, (state, action: PayloadAction<string>) => {
-        removeAccountFromStorage(action.payload);
-        const { currentAccount, accounts } = getStoredAccounts();
-        state.user = currentAccount;
-        state.ownedAccounts = accounts;
-        state.isAuthenticated = !!currentAccount;
+      .addCase(removeAccount.fulfilled, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
       })
 
       .addCase(removeAccount.rejected, (state, action) => {
