@@ -47,7 +47,7 @@ export const Login = () => {
             <Workflow className="text-white lg:size-6 xs:size-6" />
           </motion.div>
           <p className="font-medium xs:-mt-1 tracking-tight text-center text-gray-700 xs:text-[28px] sm:text-[30px]">
-            Planora
+            Planorasss
           </p>
         </div>
 
