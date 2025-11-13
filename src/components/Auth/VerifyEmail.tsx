@@ -22,7 +22,7 @@ export const VerifyEmail = () => {
           message: string;
         }
         const res = await axios.get<VerifyEmailResponse>(
-          `${import.meta.env.VITE_API_URL}/auth/verify-email?token=${token}`
+          `${import.meta.env.VITE_API_URL}/verify-email?token=${token}`
         );
 
         if (
