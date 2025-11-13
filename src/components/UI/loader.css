@@ -1,0 +1,68 @@
+.loader {
+  position: relative;
+  height: 200px;
+  width: 200px;
+  border-bottom: 3px solid #9ca3af; /* Grayish line, like skeleton shimmer */
+  box-sizing: border-box;
+  animation: drawLine 4s linear infinite;
+}
+
+/* Pencil */
+.loader:before {
+  content: "";
+  position: absolute;
+  left: calc(100% + 14px);
+  bottom: -6px;
+  width: 12px;
+  height: 100px;
+  border-radius: 20px 20px 50px 50px;
+  background-repeat: no-repeat;
+
+  /* Muted, skeleton-friendly gradient tones */
+  background-image: linear-gradient(#9ca3af 6px, transparent 0),
+    /* top pencil edge */
+      linear-gradient(45deg, rgba(0, 0, 0, 0.03) 49%, #f3f4f6 51%),
+    /* soft texture */
+      linear-gradient(315deg, rgba(0, 0, 0, 0.03) 49%, #f3f4f6 51%),
+    /* soft texture */
+      linear-gradient(
+        to bottom,
+        #e5e7eb 10%,
+        #9ca3af 10%,
+        #9ca3af 90%,
+        #e5e7eb 90%
+      ); /* pencil body */
+
+  background-size: 3px 3px, 8px 8px, 8px 8px, 16px 88px;
+  background-position: center bottom, left 88px, right 88px, left top;
+  transform: rotate(25deg);
+  animation: pencilRot 4s linear infinite;
+}
+
+@keyframes drawLine {
+  0%,
+  100% {
+    width: 0px;
+    border-color: #d1d5db; /* Light gray when idle */
+  }
+  45%,
+  55% {
+    width: 200px;
+    border-color: #9ca3af; /* Darker gray during animation */
+  }
+}
+
+@keyframes pencilRot {
+  0%,
+  45% {
+    bottom: -6px;
+    left: calc(100% + 14px);
+    transform: rotate(25deg);
+  }
+  55%,
+  100% {
+    bottom: -12px;
+    left: calc(100% + 16px);
+    transform: rotate(220deg);
+  }
+}
