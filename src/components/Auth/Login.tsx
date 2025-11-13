@@ -17,7 +17,6 @@ export const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(clearError());
-
     try {
       await dispatch(login(formData)).unwrap();
       navigate("/");

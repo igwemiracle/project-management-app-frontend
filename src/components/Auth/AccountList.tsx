@@ -65,13 +65,13 @@ export default function AccountList({
               <UserAvatar user={account} />
               <div>
                 <p
-                  className={`font-semibold text-sm ${
+                  className={`font-semibold text-base ${
                     isCurrent ? "text-blue-800" : "text-gray-800"
                   }`}
                 >
                   {account.fullName}
                 </p>
-                <p className="text-xs text-gray-600">{account.email}</p>
+                <p className="text-sm text-gray-600">{account.email}</p>
               </div>
             </div>
 
