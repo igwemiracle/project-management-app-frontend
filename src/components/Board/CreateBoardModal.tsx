@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
@@ -8,7 +8,7 @@ interface CreateBoardModalProps {
     title: string;
     description?: string;
     color?: string;
-  }) => void;
+  }) => Promise<void> | void;
 }
 
 export const COLORS = [
@@ -30,10 +30,32 @@ export const CreateBoardModal = ({
     color: COLORS[0].value
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onCreate(formData);
+    if (loading) return;
+
+    setLoading(true);
+    try {
+      await onCreate(formData);
+    } catch (error) {
+      console.error("Failed to create board:", error);
+    } finally {
+      if (isMounted.current) {
+        setLoading(false);
+      }
+    }
   };
+
+  const inputsDisabled = loading;
 
   return (
     <AnimatePresence>
@@ -49,6 +71,8 @@ export const CreateBoardModal = ({
             <button
               onClick={onClose}
               className="p-2 transition rounded-lg hover:bg-gray-100"
+              aria-label="Close create board modal"
+              disabled={loading}
             >
               <X className="w-5 h-5" />
             </button>
@@ -66,8 +90,10 @@ export const CreateBoardModal = ({
                   setFormData({ ...formData, title: e.target.value })
                 }
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={inputsDisabled}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
                 placeholder="Project Board"
+                aria-disabled={inputsDisabled}
               />
             </div>
 
@@ -81,7 +107,8 @@ export const CreateBoardModal = ({
                   setFormData({ ...formData, description: e.target.value })
                 }
                 rows={2}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={inputsDisabled}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
                 placeholder="What's this board for?"
               />
             </div>
@@ -96,6 +123,7 @@ export const CreateBoardModal = ({
                     key={color.value}
                     type="button"
                     onClick={() =>
+                      !inputsDisabled &&
                       setFormData({ ...formData, color: color.value })
                     }
                     className={`w-full aspect-square rounded-lg transition ${
@@ -104,6 +132,8 @@ export const CreateBoardModal = ({
                         : "hover:scale-110"
                     }`}
                     style={{ backgroundColor: color.value }}
+                    aria-label={`Select ${color.name}`}
+                    disabled={inputsDisabled}
                   />
                 ))}
               </div>
@@ -113,15 +143,18 @@ export const CreateBoardModal = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-2 text-gray-700 transition border border-gray-300 rounded-lg hover:bg-gray-50"
+                disabled={loading}
+                className="flex-1 px-4 py-2 text-gray-700 transition border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 px-4 py-2 text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
+                disabled={loading}
+                className="flex-1 px-4 py-2 text-white transition bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed"
+                aria-busy={loading}
               >
-                Create
+                {loading ? "Creating..." : "Create"}
               </button>
             </div>
           </form>

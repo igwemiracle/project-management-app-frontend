@@ -25,6 +25,7 @@ import Homepage from "./components/Homepage/Homepage";
 import { SwitchAccounts } from "./components/Auth/SwitchAccounts";
 import { AuthLayout } from "./components/Auth/AuthLayout";
 import ResetPassword from "./components/Auth/ResetPassword";
+import { NavbarSkeleton } from "./components/SkeletonLoader/NavbarSkeleton";
 import Loader from "./components/UI/Loader";
 
 function AppContent() {
@@ -39,17 +40,20 @@ function AppContent() {
     dispatch(getProfile());
   }, [dispatch]);
 
-  if (!initialized) {
-    // ✅ Wait until auth check completes before deciding
-    return <Loader />;
-  }
-
   const isAuthRoute =
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/register") ||
     location.pathname.startsWith("/verify-email") ||
     location.pathname.startsWith("/switch-accounts") ||
     location.pathname.startsWith("/reset-password");
+
+  if (!initialized) {
+    // ✅ Show different loader depending on route
+    if (isAuthRoute) {
+      return <Loader />;
+    }
+    return <NavbarSkeleton />;
+  }
 
   if (!isAuthenticated && !isAuthRoute) {
     return <Navigate to="/login" replace />;

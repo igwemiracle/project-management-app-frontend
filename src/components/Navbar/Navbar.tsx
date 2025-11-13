@@ -36,10 +36,13 @@ export default function Navbar() {
   };
   return (
     <>
-      <nav className="bg-white border border-b-gray-300 h-12 flex items-center justify-between px-4 text-white fixed top-0 left-0 right-0 z-40">
+      <nav className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between h-12 px-4 text-white bg-white border border-b-gray-300">
         {/* Left Section - Logo */}
         <Link to={"/"} className="flex items-center space-x-2">
-          <WorkflowIcon size={22} className="text-blue-600" />
+          <div className="flex items-center justify-center p-1 bg-blue-600 rounded-md">
+            <WorkflowIcon size={16} strokeWidth={3} className="text-white" />
+          </div>
+
           <span className="font-semibold text-[15px] tracking-wide text-gray-800">
             Planora
           </span>
@@ -59,7 +62,7 @@ export default function Navbar() {
           <div className="xs:block lg:hidden">
             {!showSearchDropdown && (
               <IconButton onClick={() => setShowSearchDropdown(true)}>
-                <Search size={18} className=" text-gray-800" />
+                <Search size={18} className="text-gray-800 " />
               </IconButton>
             )}
 

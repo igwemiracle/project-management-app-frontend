@@ -38,11 +38,11 @@ export const BoardList = () => {
   }, [dispatch, workspaceId]);
 
   return (
-    <div className="min-h-screen px-3 py-4 xs:px-4 xs:py-6 sm:p-6 md:p-8 bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen px-3 py-4 mt-12 xs:px-4 xs:py-6 sm:p-6 md:p-8 bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="w-full mx-auto max-w-7xl">
         {/* Header Section */}
         <div className="flex flex-col items-start gap-3 mb-6 xs:gap-4 xs:mb-8 sm:flex-row sm:items-center sm:justify-between">
-          <div className="mt-12 flex items-center w-full gap-3 sm:w-auto">
+          <div className="flex items-center w-full gap-3 mt-12 sm:w-auto">
             {/* Back Button */}
             <button
               onClick={handleOnBack}

@@ -29,7 +29,7 @@ export default function RecentlyViewedBoard() {
     <div className="mt-20">
       {loading ? (
         <>
-          <div className=" flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4 ">
             <Clock size={20} />
             <h1 className="text-lg font-bold leading-tight text-foreground">
               Recently viewed boards{" "}
@@ -42,15 +42,16 @@ export default function RecentlyViewedBoard() {
           </div>
         </>
       ) : recentBoards.length === 0 ? (
-        <>
-          <div className=" flex items-center gap-2 mb-4">
-            <Clock size={20} />
-            <h1 className="text-lg font-bold leading-tight text-foreground">
-              Recently viewed boards
-            </h1>
-          </div>
-          <p className="text-gray-500">No recently viewed boards yet.</p>
-        </>
+        // <>
+        //   <div className="flex items-center gap-2 mb-4 ">
+        //     <Clock size={20} />
+        //     <h1 className="text-lg font-bold leading-tight text-foreground">
+        //       Recently viewed boards
+        //     </h1>
+        //   </div>
+        //   <p className="text-gray-500">No recently viewed boards yet.</p>
+        // </>
+        ""
       ) : (
         <>
           <div className="flex items-center gap-2 mb-4 ">

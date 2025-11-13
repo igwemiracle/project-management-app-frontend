@@ -85,7 +85,7 @@ export const Login = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              type={showPassword ? "password" : "text"}
+              type={showPassword ? "text" : "password"}
               required
               className="w-full py-2 pl-10 pr-4 transition border border-gray-300 rounded-lg placeholder:text-sm lg:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your password"
@@ -93,9 +93,9 @@ export const Login = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform text-gray-400 -translate-y-1/2 text-sm hover:underline focus:outline-none"
+              className="absolute text-sm text-gray-400 transform -translate-y-1/2 right-3 top-1/2 hover:underline focus:outline-none"
             >
-              {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
+              {showPassword ? <Eye size={22} /> : <EyeOff size={22} />}
             </button>
           </div>
         </div>

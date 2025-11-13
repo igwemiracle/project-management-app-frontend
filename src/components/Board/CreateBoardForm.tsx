@@ -149,7 +149,7 @@ export default function CreateBoardForm({
 
           {showWorkspaceDropdown && (
             <div
-              className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-200 rounded-md shadow-up-down z-50 py-2"
+              className="absolute left-0 z-50 w-full py-2 mt-2 bg-white border border-gray-200 rounded-md top-full shadow-up-down"
               onClick={(e) => e.stopPropagation()}
             >
               {workspaces.map((workspace) => {

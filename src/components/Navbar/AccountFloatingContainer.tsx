@@ -88,8 +88,8 @@ export default function AccountFloatingContainer({
         ${isOpening ? "translate-x-0" : "translate-x-[100%]"} 
         ${className}`}
       >
-        <div className="w-full px-4 py-6 space-y-3 text-gray-200 shadow-lg rounded-b-xl bg-white">
-          <IconButton className="hover:bg-gray-100 -ml-3">
+        <div className="w-full px-4 py-6 space-y-3 text-gray-200 bg-white shadow-lg rounded-b-xl">
+          <IconButton className="-ml-3 hover:bg-gray-100">
             <ArrowLeft
               size={18}
               className="text-gray-600"
@@ -108,7 +108,7 @@ export default function AccountFloatingContainer({
                   <p className="font-medium xs:text-[14px] text-gray-800 lg:text-sm">
                     {flatUser?.fullName}
                   </p>
-                  <p className="xs:text-[12px] lg:text-sm text-gray-700">
+                  <p className="xs:text-[12px] lg:text-sm text-gray-600">
                     {flatUser?.email}
                   </p>
                 </div>
@@ -117,11 +117,11 @@ export default function AccountFloatingContainer({
             <ul className="text-[14px] text-gray-800">
               <li
                 onClick={() => navigate("/switch-accounts")}
-                className="hover:bg-gray-100 px-3 py-2 rounded-lg cursor-pointer transition-colors duration-200"
+                className="px-3 py-2 transition-colors duration-200 rounded-lg cursor-pointer hover:bg-gray-100"
               >
                 Switch accounts
               </li>
-              <li className="hover:bg-gray-100 px-3 py-2 rounded-lg cursor-pointer">
+              <li className="px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100">
                 Manage account
               </li>
             </ul>
@@ -134,19 +134,19 @@ export default function AccountFloatingContainer({
               PLANORA
             </h2>
             <ul className="text-[14px] text-gray-800">
-              <li className="hover:bg-gray-100 px-3 py-2 rounded-lg cursor-pointer">
+              <li className="px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100">
                 Profile and visibility
               </li>
-              <li className="hover:bg-gray-100 px-3 py-2 rounded-lg cursor-pointer">
+              <li className="px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100">
                 Activity
               </li>
-              <li className="hover:bg-gray-100 px-3 py-2 rounded-lg cursor-pointer">
+              <li className="px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100">
                 Cards
               </li>
-              <li className="hover:bg-gray-100 px-3 py-2 rounded-lg cursor-pointer">
+              <li className="px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100">
                 Settings
               </li>
-              <li className="hover:bg-gray-100 px-3 py-2 rounded-lg cursor-pointer flex justify-between items-center">
+              <li className="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100">
                 <span>Theme</span>
                 <span className="text-gray-400">›</span>
               </li>
@@ -158,7 +158,7 @@ export default function AccountFloatingContainer({
               openModal("workspace");
               closeMenu();
             }}
-            className="hover:bg-gray-100 px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100"
           >
             <span>
               <Users size={18} className="text-black" />
@@ -169,10 +169,10 @@ export default function AccountFloatingContainer({
           <hr className="border-gray-300" />
 
           <ul className="text-[14px] text-gray-800">
-            <li className="hover:bg-gray-100 px-3 py-2 rounded-lg cursor-pointer">
+            <li className="px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100">
               Help
             </li>
-            <li className="hover:bg-gray-100 px-3 py-2 rounded-lg cursor-pointer">
+            <li className="px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100">
               Shortcuts
             </li>
           </ul>
@@ -181,7 +181,7 @@ export default function AccountFloatingContainer({
 
           <div
             onClick={handleLogout}
-            className="hover:bg-gray-100 text-gray-800 px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2"
+            className="flex items-center gap-2 px-3 py-2 text-gray-800 rounded-lg cursor-pointer hover:bg-gray-100"
           >
             <LogOut size={18} />
             <p className="text-[14px]">Log out</p>

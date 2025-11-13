@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Plus, Users as UsersIcon } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -11,8 +11,8 @@ import { KanbanList } from "./KanbanList";
 import { CardDetailModal } from "./CardDetailModal";
 import { Card } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
-import Loader from "../UI/Loader";
 import ListSkeleton from "../SkeletonLoader/ListSkeleton";
+import Loader from "../UI/Loader";
 
 export const KanbanBoard = () => {
   const dispatch = useAppDispatch();
@@ -31,36 +31,60 @@ export const KanbanBoard = () => {
   const [showNewList, setShowNewList] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
-  // ✅ Go back to previous page
-  const handleOnBack = () => {
-    navigate(-1);
-  };
+  const [creatingList, setCreatingList] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const isMounted = useRef(true);
 
-  // ✅ Fetch board data if boardId exists
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   useEffect(() => {
     if (boardId) {
       dispatch(fetchBoardData(boardId));
     }
   }, [dispatch, boardId]);
 
-  // ✅ Create new list safely
-  const handleCreateList = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newListName.trim() || !boardId) return;
+  useEffect(() => {
+    if (!loading) {
+      setInitialLoading(false);
+    }
+  }, [loading]);
 
-    await dispatch(
-      createList({
-        title: newListName,
-        board: boardId,
-        position: lists.length
-      })
-    );
-
-    setNewListName("");
-    setShowNewList(false);
+  // go back
+  const handleOnBack = () => {
+    navigate(-1);
   };
 
-  // ✅ Create new card safely
+  // ✅ HANDLE CREATING NEW LISTS
+  const handleCreateList = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newListName.trim() || !boardId || creatingList) return;
+
+    setCreatingList(true);
+
+    try {
+      await dispatch(
+        createList({
+          title: newListName,
+          board: boardId,
+          position: lists.length
+        })
+      ).unwrap();
+
+      setNewListName("");
+      setShowNewList(false);
+    } catch (error) {
+      console.error("Failed to create list:", error);
+    } finally {
+      // reset after creation completes
+      setCreatingList(false);
+    }
+  };
+
+  // ✅ CREATE CARD
   const handleCreateCard = async (listId: string, title: string) => {
     if (!boardId) return;
 
@@ -79,12 +103,13 @@ export const KanbanBoard = () => {
     );
   };
 
-  // ✅ Safely filter users for this board
+  // filter online users for the board
   const boardOnlineUsers = boardId
     ? onlineUsers.filter((u) => u.boardId === boardId)
     : [];
 
-  if (loading) {
+  //✅ SHOW FULL-SCREEN LOADER ONLY DURING INITIAL PAGE LOAD
+  if (initialLoading) {
     return <Loader />;
   }
 
@@ -94,7 +119,7 @@ export const KanbanBoard = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-slate-100 to-slate-200">
-      <div className="mt-12 px-6 py-4 bg-white border-b border-gray-200">
+      <div className="px-6 py-4 mt-12 bg-white border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -156,23 +181,29 @@ export const KanbanBoard = () => {
                   onChange={(e) => setNewListName(e.target.value)}
                   placeholder="Enter list name..."
                   autoFocus
-                  className="w-full px-3 py-2 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={creatingList}
+                  className="w-full px-3 py-2 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
                 />
+
                 <div className="flex gap-2">
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="flex-1 px-4 py-2 text-sm font-medium text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
+                    disabled={creatingList}
+                    className="flex-1 px-4 py-2 text-sm font-medium text-white transition bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Add List
+                    {creatingList ? "Adding..." : "Add List"}
                   </button>
+
                   <button
                     type="button"
                     onClick={() => {
-                      setShowNewList(false);
-                      setNewListName("");
+                      if (!creatingList) {
+                        setShowNewList(false);
+                        setNewListName("");
+                      }
                     }}
-                    className="px-4 py-2 text-gray-600 transition rounded-lg hover:bg-gray-100"
+                    disabled={creatingList}
+                    className="px-4 py-2 text-gray-600 transition rounded-lg hover:bg-gray-100 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     Cancel
                   </button>

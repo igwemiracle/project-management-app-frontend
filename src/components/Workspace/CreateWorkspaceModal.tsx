@@ -4,7 +4,10 @@ import { X } from "lucide-react";
 
 interface CreateWorkspaceModalProps {
   onClose: () => void;
-  onCreate: (data: { name: string; description?: string }) => void;
+  onCreate: (data: {
+    name: string;
+    description?: string;
+  }) => Promise<void> | void;
 }
 
 export const CreateWorkspaceModal = ({
@@ -15,10 +18,21 @@ export const CreateWorkspaceModal = ({
     name: "",
     description: ""
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ✅ PREVENT MULTIPLE CLICKS
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onCreate(formData);
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      await onCreate(formData);
+    } catch (error) {
+      console.error("Failed to create workspace:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -28,7 +42,7 @@ export const CreateWorkspaceModal = ({
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
-          className="bg-white rounded-xl shadow-2xl w-full max-w-md"
+          className="w-full max-w-md bg-white shadow-2xl rounded-xl"
         >
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <h2 className="text-2xl font-bold text-gray-900">
@@ -36,7 +50,8 @@ export const CreateWorkspaceModal = ({
             </h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition"
+              disabled={loading}
+              className="p-2 transition rounded-lg hover:bg-gray-100"
             >
               <X className="w-5 h-5" />
             </button>
@@ -44,7 +59,7 @@ export const CreateWorkspaceModal = ({
 
           <form onSubmit={handleSubmit} className="p-6">
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
                 Workspace Name
               </label>
               <input
@@ -53,6 +68,7 @@ export const CreateWorkspaceModal = ({
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
+                disabled={loading}
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="My Awesome Workspace"
@@ -60,7 +76,7 @@ export const CreateWorkspaceModal = ({
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
                 Description (optional)
               </label>
               <textarea
@@ -69,24 +85,28 @@ export const CreateWorkspaceModal = ({
                   setFormData({ ...formData, description: e.target.value })
                 }
                 rows={3}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                disabled={loading}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="What's this workspace about?"
               />
             </div>
 
+            {/* Buttons */}
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+                disabled={loading}
+                className="flex-1 px-4 py-2 text-gray-700 transition border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                disabled={loading}
+                className="flex-1 px-4 py-2 text-white transition bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Create
+                {loading ? "Creating..." : "Create"}
               </button>
             </div>
           </form>

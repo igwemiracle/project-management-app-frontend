@@ -1,12 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://project-management-app-backend-1qdc.onrender.com/api/:path*"
-    },
-    {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/"
     }
   ]
 }
