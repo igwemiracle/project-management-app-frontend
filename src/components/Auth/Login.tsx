@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, Workflow } from "lucide-react";
+import { Mail, Lock, Workflow, EyeOff, Eye } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { login, clearError } from "../../store/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ export const Login = () => {
     email: "",
     password: ""
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,14 +82,21 @@ export const Login = () => {
           <div className="relative">
             <Lock className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
             <input
-              type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
+              type={showPassword ? "password" : "text"}
               required
               className="w-full py-2 pl-10 pr-4 transition border border-gray-300 rounded-lg placeholder:text-sm lg:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your password"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform text-gray-400 -translate-y-1/2 text-sm hover:underline focus:outline-none"
+            >
+              {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
+            </button>
           </div>
         </div>
 
