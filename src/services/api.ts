@@ -6,6 +6,11 @@ const getAuthHeaders = {
 };
 
 export const api = {
+  /**
+   * ✅ AUTHENTICATION API
+   * This section contains all API calls related to user authentication.
+   * It includes methods for registering, logging in, and logging out users.
+   */
   auth: {
     register: async (data: { username: string; email: string; password: string; fullName: string }) => {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
@@ -40,6 +45,11 @@ export const api = {
     },
   },
 
+  /**
+   * ✅ USERS API
+   * This section contains all API calls related to user management.
+   * It includes methods to get user profiles, create sub-accounts, switch accounts, and remove accounts.
+   */
   users: {
     getProfile: async () => {
       const response = await fetch(`${API_BASE_URL}/users/profile`, {
@@ -119,40 +129,11 @@ export const api = {
     },
   },
 
-  recentlyViewedBoards: {
-    getAll: async () => {
-      const response = await fetch(`${API_BASE_URL}/recently-viewed`, {
-        method: "GET",
-        credentials: "include",
-      });
-      return response.json();
-    },
-    addView: async (boardId: string) => {
-      const response = await fetch(`${API_BASE_URL}/recently-viewed/${boardId}`, {
-        method: "POST",
-        credentials: "include",
-      });
-      return response.json();
-    },
-  },
-
-  starredBoards: {
-    getAll: async () => {
-      const response = await fetch(`${API_BASE_URL}/recently-viewed/starred-boards`, {
-        method: "GET",
-        credentials: "include",
-      });
-      return response.json();
-    },
-    toggleStar: async (boardId: string) => {
-      const response = await fetch(`${API_BASE_URL}/recently-viewed/starred-boards/${boardId}/toggle`, {
-        method: "POST",
-        credentials: "include",
-      });
-      return response.json();
-    },
-  },
-
+  /**
+   * ✅ WORKSPACES API
+   * This section contains all API calls related to workspaces.
+   * It includes methods to get, create, update, and delete workspaces.
+   */
   workspaces: {
     getAll: async () => {
       const response = await fetch(`${API_BASE_URL}/workspaces`, {
@@ -195,6 +176,11 @@ export const api = {
     },
   },
 
+  /**
+   * ✅ BOARDS API
+   * This section contains all API calls related to boards.
+   * It includes methods to get, create, update, delete, and manage starred boards.
+   */
   boards: {
     getAll: async (workspaceId: string) => {
       const response = await fetch(`${API_BASE_URL}/boards?workspace=${workspaceId}`, {
@@ -213,7 +199,7 @@ export const api = {
       return response.json();
     },
     updateFavorite: async (boardId: string, isFavorite: boolean) => {
-      const response = await fetch(`${API_BASE_URL}/boards/${boardId}`, {
+      const response = await fetch(`${API_BASE_URL}/starred-boards/${boardId}`, {
         method: "PATCH",
         headers: getAuthHeaders,
         credentials: "include",
@@ -245,7 +231,37 @@ export const api = {
       return response.json();
     },
   },
+  recentlyViewedBoards: {
+    getAll: async () => {
+      const response = await fetch(`${API_BASE_URL}/recently-viewed`, {
+        method: "GET",
+        credentials: "include",
+      });
+      return response.json();
+    },
+    addView: async (boardId: string) => {
+      const response = await fetch(`${API_BASE_URL}/recently-viewed/${boardId}`, {
+        method: "POST",
+        credentials: "include",
+      });
+      return response.json();
+    },
+  },
+  starredBoards: {
+    getAll: async () => {
+      const response = await fetch(`${API_BASE_URL}/starred-boards`, {
+        method: "GET",
+        credentials: "include",
+      });
+      return response.json();
+    }
+  },
 
+  /**
+   * ✅ LISTS API
+   * This section contains all API calls related to lists.
+   * It includes methods to get, create, update, and delete lists.
+   */
   lists: {
     getAll: async (boardId: string) => {
       const response = await fetch(`${API_BASE_URL}/lists?board=${boardId}`, {
@@ -281,6 +297,11 @@ export const api = {
     },
   },
 
+  /**
+   * ✅ CARDS API
+   * This section contains all API calls related to cards.
+   * It includes methods to get, create, update, and delete cards.
+   */
   cards: {
     getAll: async (boardId: string) => {
       const response = await fetch(`${API_BASE_URL}/cards?board=${boardId}`, {
@@ -323,6 +344,11 @@ export const api = {
     },
   },
 
+  /**
+   * ✅ COMMENTS API
+   * This section contains all API calls related to comments.
+   * It includes methods to get, create, update, and delete comments.
+   */
   comments: {
     getAll: async (cardId: string) => {
       const response = await fetch(`${API_BASE_URL}/comments?card=${cardId}`, {
@@ -358,6 +384,11 @@ export const api = {
     },
   },
 
+  /**
+   * ✅ ACTIVITY LOGS API
+   * This section contains all API calls related to activity logs.
+   * It includes methods to get activity logs based on filters.
+   */
   activityLogs: {
     getAll: async (filters: { workspace?: string; board?: string }) => {
       const params = new URLSearchParams();

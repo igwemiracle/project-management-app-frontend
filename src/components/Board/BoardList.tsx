@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Layout, ArrowLeft } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchBoards } from "../../store/slices/boardSlice";
+import { fetchBoards, toggleFavorite } from "../../store/slices/boardSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "../../context/ModalContext";
 import { api } from "../../services/api";
@@ -17,19 +17,13 @@ export const BoardList = () => {
   const navigate = useNavigate();
   const { openModal } = useModal();
 
-  const handleSelect = async (boardId: string) => {
-    try {
-      await api.recentlyViewedBoards.addView(boardId);
-    } catch (error) {
-      console.error("Failed to record board view:", error);
-    }
-    // Navigate to board details page
-    navigate(`/boards/${boardId}`);
-  };
+  // ✅ Local state for immediate star toggle feedback
+  const [localBoards, setLocalBoards] = useState(boards);
 
-  const handleOnBack = () => {
-    navigate("/");
-  };
+  // Sync localBoards whenever Redux boards change
+  useEffect(() => {
+    setLocalBoards(boards);
+  }, [boards]);
 
   useEffect(() => {
     if (workspaceId) {
@@ -37,13 +31,38 @@ export const BoardList = () => {
     }
   }, [dispatch, workspaceId]);
 
+  const handleCardClick = async (boardId: string) => {
+    try {
+      await api.recentlyViewedBoards.addView(boardId);
+    } catch (error) {
+      console.error("Failed to record view:", error);
+    }
+    navigate(`/boards/${boardId}`);
+  };
+
+  // Click on the star icon
+  const handleStarClick = (boardId: string) => {
+    setLocalBoards((prev) =>
+      prev.map((b) =>
+        b._id === boardId ? { ...b, isFavorite: !b.isFavorite } : b
+      )
+    );
+
+    // 2️⃣ Update Redux (keeps other components in sync)
+    const currentFavorite = boards.find((b) => b._id === boardId)?.isFavorite;
+    dispatch(toggleFavorite({ boardId, isFavorite: !currentFavorite }));
+  };
+
+  const handleOnBack = () => {
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen px-3 py-4 mt-12 xs:px-4 xs:py-6 sm:p-6 md:p-8 bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="w-full mx-auto max-w-7xl">
         {/* Header Section */}
         <div className="flex flex-col items-start gap-3 mb-6 xs:gap-4 xs:mb-8 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center w-full gap-3 mt-12 sm:w-auto">
-            {/* Back Button */}
             <button
               onClick={handleOnBack}
               className="p-2 transition rounded-lg hover:bg-white"
@@ -51,7 +70,6 @@ export const BoardList = () => {
               <ArrowLeft className="w-5 h-5 text-gray-700 xs:w-6 xs:h-6" />
             </button>
 
-            {/* Workspace Info */}
             <div className="flex-1 min-w-0">
               <h1 className="mb-1 text-2xl font-bold leading-tight text-gray-900 xs:text-3xl sm:text-4xl">
                 {currentWorkspace?.name}
@@ -62,7 +80,6 @@ export const BoardList = () => {
             </div>
           </div>
 
-          {/* New Board Button */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -80,7 +97,7 @@ export const BoardList = () => {
               <CardSkeleton key={i} />
             ))}
           </div>
-        ) : !boards || boards.length === 0 ? (
+        ) : !localBoards || localBoards.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -95,14 +112,14 @@ export const BoardList = () => {
             </p>
           </motion.div>
         ) : (
-          // Board Grid
           <div className="grid xl:grid-cols-4 xl:gap-x-1 lg:grid-cols-3 xs:grid-cols-1 xs:gap-y-3 xxs:grid-cols-2 sm:grid-cols-2 xs:gap-2">
-            {boards.map((board, index) => (
+            {localBoards.map((board, index) => (
               <BoardCard
                 key={board._id}
                 board={board}
                 index={index}
-                onClick={handleSelect}
+                onClick={handleCardClick}
+                onFavoriteClick={handleStarClick}
                 animate={false}
                 showFavorite={true}
               />

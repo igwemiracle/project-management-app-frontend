@@ -27,6 +27,7 @@ import { AuthLayout } from "./components/Auth/AuthLayout";
 import ResetPassword from "./components/Auth/ResetPassword";
 import { NavbarSkeleton } from "./components/SkeletonLoader/NavbarSkeleton";
 import Loader from "./components/UI/Loader";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function AppContent() {
   const dispatch = useAppDispatch();
@@ -116,15 +117,18 @@ function AppContent() {
 }
 
 function App() {
+  const queryClient = new QueryClient();
   return (
-    <Provider store={store}>
-      <ModalProvider>
-        <GlobalModals />
-        <Router>
-          <AppContent />
-        </Router>
-      </ModalProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <ModalProvider>
+          <GlobalModals />
+          <Router>
+            <AppContent />
+          </Router>
+        </ModalProvider>
+      </Provider>
+    </QueryClientProvider>
   );
 }
 

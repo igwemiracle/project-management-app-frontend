@@ -9,6 +9,7 @@ export interface BoardCardProps {
   board: Board;
   index?: number;
   onClick: (boardId: string) => void;
+  onFavoriteClick?: (boardId: string) => void;
   animate?: boolean;
   showFavorite?: boolean;
 }
@@ -17,19 +18,25 @@ const BoardCard = ({
   board,
   index = 0,
   onClick,
+  onFavoriteClick,
   animate = true,
   showFavorite = true
 }: BoardCardProps) => {
   const CardWrapper = animate ? motion.div : "div";
-  const [isFavorite, setIsFavorite] = useState<boolean>(!!board.isFavorite);
+  const isFavorite = !!board.isFavorite;
+
   const [hovered, setHovered] = useState(false);
   const dispatch = useAppDispatch();
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const newValue = !isFavorite;
-    setIsFavorite(newValue);
-    dispatch(toggleFavorite({ boardId: board._id, isFavorite: newValue }));
+    if (onFavoriteClick) {
+      onFavoriteClick(board._id);
+    } else {
+      dispatch(
+        toggleFavorite({ boardId: board._id, isFavorite: !board.isFavorite })
+      );
+    }
   };
 
   const truncateText = (text: string | undefined, maxLength: number) =>

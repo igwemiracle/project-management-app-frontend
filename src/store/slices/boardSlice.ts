@@ -64,6 +64,7 @@ export const createBoard = createAsyncThunk(
   }
 );
 
+// ✅ TOGGLE FAVORITE BOARD
 export const toggleFavorite = createAsyncThunk(
   "boards/toggleFavorite",
   async ({ boardId, isFavorite }: { boardId: string; isFavorite: boolean }, { rejectWithValue }) => {
@@ -81,6 +82,7 @@ export const fetchBoard = createAsyncThunk('boards/fetchOne', async (id: string)
   return response;
 });
 
+// ✅ FETCH RECENTLY VIEWED BOARDS
 export const fetchRecentlyViewedBoards = createAsyncThunk<
   { success: boolean; boards: Board[] },
   void,
