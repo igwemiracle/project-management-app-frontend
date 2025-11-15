@@ -136,6 +136,23 @@ export const api = {
     },
   },
 
+  starredBoards: {
+    getAll: async () => {
+      const response = await fetch(`${API_BASE_URL}/recently-viewed/starred-boards`, {
+        method: "GET",
+        credentials: "include",
+      });
+      return response.json();
+    },
+    toggleStar: async (boardId: string) => {
+      const response = await fetch(`${API_BASE_URL}/recently-viewed/starred-boards/${boardId}/toggle`, {
+        method: "POST",
+        credentials: "include",
+      });
+      return response.json();
+    },
+  },
+
   workspaces: {
     getAll: async () => {
       const response = await fetch(`${API_BASE_URL}/workspaces`, {
@@ -204,7 +221,6 @@ export const api = {
       });
       return response.json();
     },
-
     getById: async (id: string) => {
       const response = await fetch(`${API_BASE_URL}/boards/${id}`, {
         method: "GET",

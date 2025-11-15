@@ -6,6 +6,7 @@ interface BoardState {
   boards: Board[];
   currentBoard: Board | null;
   recentBoards: Board[];
+  starredBoards: Board[];
   lists: List[];
   cards: Card[];
   loading: boolean;
@@ -32,8 +33,10 @@ const initialState: BoardState = {
   loading: false,
   error: null,
   recentBoards: [],
+  starredBoards: []
 };
 
+// ✅ BOARD ACTIONS
 export const fetchBoards = createAsyncThunk<Board[], string>(
   'boards/fetchAll',
   async (workspaceId, { rejectWithValue }) => {
@@ -78,12 +81,33 @@ export const fetchBoard = createAsyncThunk('boards/fetchOne', async (id: string)
   return response;
 });
 
-export const fetchRecentlyViewedBoards = createAsyncThunk<Board[]>(
+export const fetchRecentlyViewedBoards = createAsyncThunk<
+  { success: boolean; boards: Board[] },
+  void,
+  { rejectValue: string }
+>(
   "boards/fetchRecentlyViewed",
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.recentlyViewedBoards.getAll();
-      return response.boards;
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+
+export const fetchStarredBoards = createAsyncThunk<
+  { success: boolean; favorites: Board[] },
+  void,
+  { rejectValue: string }
+>(
+  "boards/fetchStarred",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.starredBoards.getAll();
+      return response;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
@@ -116,6 +140,7 @@ export const fetchBoardData = createAsyncThunk<
 );
 
 
+// ✅ LIST ACTIONS
 export const createList = createAsyncThunk<List, { title: string; board: string; position?: number }>(
   "boards/createList",
   async (data, { rejectWithValue }) => {
@@ -145,7 +170,7 @@ export const deleteList = createAsyncThunk('boards/deleteList', async (id: strin
   return id;
 });
 
-
+// ✅ CARD ACTIONS
 export const createCard = createAsyncThunk<Card, CreateCardPayload>(
   "boards/createCard",
   async (data) => {
@@ -228,6 +253,7 @@ const boardSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      // ✅ FETCH BOARDS
       .addCase(fetchBoards.pending, (state) => {
         state.loading = true;
       })
@@ -263,9 +289,71 @@ const boardSlice = createSlice({
       })
       .addCase(fetchRecentlyViewedBoards.fulfilled, (state, action) => {
         state.loading = false;
-        state.recentBoards = action.payload;
+        state.recentBoards = action.payload.boards;
       })
+
       .addCase(fetchRecentlyViewedBoards.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // ✅ FETCH STARRED BOARDS
+      .addCase(fetchStarredBoards.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchStarredBoards.fulfilled, (state, action) => {
+        state.loading = false;
+        state.starredBoards = action.payload.favorites;
+      })
+
+      // ✅ TOGGLE STAR BOARD
+      .addCase(toggleFavorite.pending, (state, action) => {
+        const { boardId, isFavorite } = action.meta.arg;
+
+        if (isFavorite) {
+          const exists = state.starredBoards.find(b => b._id === boardId);
+          if (!exists && state.boards) {
+            const boardToAdd = state.boards.find(b => b._id === boardId);
+            if (boardToAdd) state.starredBoards = [boardToAdd, ...state.starredBoards];
+          }
+        } else {
+          state.starredBoards = state.starredBoards.filter(b => b._id !== boardId);
+        }
+
+        if (state.starredBoards.length > 4) {
+          state.starredBoards = state.starredBoards.slice(0, 4);
+        }
+      })
+
+      // inside extraReducers
+      .addCase(toggleFavorite.fulfilled, (state, action: PayloadAction<Board>) => {
+        const updatedBoard = action.payload;
+
+        // ---------- Update starredBoards ----------
+        const starredIndex = state.starredBoards.findIndex(b => b._id === updatedBoard._id);
+        if (updatedBoard.isFavorite) {
+          // Add to starred if not already there
+          if (starredIndex === -1) state.starredBoards.push(updatedBoard);
+          else state.starredBoards[starredIndex] = updatedBoard;
+        } else {
+          // Remove from starred if it exists
+          if (starredIndex !== -1) state.starredBoards.splice(starredIndex, 1);
+        }
+
+        // ---------- Update recentBoards ----------
+        const recentIndex = state.recentBoards.findIndex(b => b._id === updatedBoard._id);
+        if (recentIndex !== -1) {
+          state.recentBoards[recentIndex] = updatedBoard;
+        }
+
+        // ---------- Update currentBoard if needed ----------
+        if (state.currentBoard?._id === updatedBoard._id) {
+          state.currentBoard = updatedBoard;
+        }
+      })
+
+
+      .addCase(fetchStarredBoards.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
