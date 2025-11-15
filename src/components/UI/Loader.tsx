@@ -1,19 +1,20 @@
-import { motion } from "framer-motion";
 import { Workflow } from "lucide-react";
+import "./loader.css";
 
 const Loader = () => {
   return (
-    <div className="flex items-center justify-center h-screen bg-white">
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{
-          repeat: Infinity,
-          ease: "linear",
-          duration: 1.2
-        }}
-      >
-        <Workflow className="w-10 h-10 text-blue-500" />
-      </motion.div>
+    <div className="loader-wrapper">
+      <div className="loader-content">
+        <div className="icon-text-wrapper">
+          <div className="flex items-center gap-2">
+            <div className="loader-icon-container">
+              <Workflow className="loader-icon" />
+            </div>
+            <span className="loader-text">Planora</span>
+          </div>
+          <div className="loader-line"></div>
+        </div>
+      </div>
     </div>
   );
 };

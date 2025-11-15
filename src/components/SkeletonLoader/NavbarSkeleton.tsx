@@ -8,10 +8,10 @@ export const NavbarSkeleton = () => {
       <nav className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between h-12 px-4 bg-white">
         {/* Left Section - Logo */}
         <div className="flex items-center space-x-2">
-          <div className="flex items-center justify-center p-1 bg-gray-400 rounded-md">
+          <div className="flex items-center justify-center p-1 bg-gray-300 rounded-md">
             <WorkflowIcon size={16} strokeWidth={3} className="text-white" />
           </div>
-          <div className="font-semibold text-[15px] tracking-wide text-gray-500">
+          <div className="font-semibold text-[15px] tracking-wide text-gray-400">
             Planora
           </div>
         </div>
@@ -46,7 +46,7 @@ export const NavbarSkeleton = () => {
       </nav>
 
       {/* Centered Loader Below Navbar */}
-      <div className="flex items-center justify-center h-[calc(50vh-3rem)]">
+      <div className="flex items-center justify-center h-[calc(30vh-3rem)]">
         <span className="loader"></span>
       </div>
     </div>
