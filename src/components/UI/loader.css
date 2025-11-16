@@ -26,9 +26,10 @@
 
 .loader-wrapper {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
-  height: 100vh;
+  margin: 12rem;
+  height: 30vh;
 }
 
 .loader-content {
