@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { images } from "../../assets";
 import BrandHeader from "../BrandHeader/BrandHeader";
 import BottomImage from "./BottomImage";
+import Input from "../UI/Input";
 
 export const Login = () => {
   const dispatch = useAppDispatch();
@@ -59,14 +60,14 @@ export const Login = () => {
             </label>
             <div className="relative">
               <Mail className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
-              <input
+              <Input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full py-2 pl-10 pr-4 transition border border-gray-300 rounded-lg placeholder:text-sm lg:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="you@example.com"
+                className="pl-10"
               />
             </div>
           </div>
@@ -77,14 +78,14 @@ export const Login = () => {
             </label>
             <div className="relative">
               <Lock className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
-              <input
+              <Input
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 type={showPassword ? "text" : "password"}
                 required
-                className="w-full py-2 pl-10 pr-4 transition border border-gray-300 rounded-lg placeholder:text-sm lg:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your password"
+                className="pl-10"
               />
               <button
                 type="button"

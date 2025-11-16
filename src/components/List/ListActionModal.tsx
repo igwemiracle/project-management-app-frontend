@@ -103,7 +103,7 @@ export const ListActionModal = ({
 
         {/* Archive List */}
         <button className="w-full px-4 py-2 rounded-lg text-left hover:bg-red-50 text-red-600 font-medium transition">
-          Archive list
+          Delete list
         </button>
       </div>
     </div>

@@ -13,6 +13,7 @@ import { Card } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import ListSkeleton from "../SkeletonLoader/ListSkeleton";
 import Loader from "../UI/Loader";
+import Input from "../UI/Input";
 
 export const KanbanBoard = () => {
   const dispatch = useAppDispatch();
@@ -175,14 +176,14 @@ export const KanbanBoard = () => {
                 onSubmit={handleCreateList}
                 className="p-4 bg-white rounded-lg shadow-sm"
               >
-                <input
+                <Input
                   type="text"
                   value={newListName}
                   onChange={(e) => setNewListName(e.target.value)}
                   placeholder="Enter list name..."
                   autoFocus
                   disabled={creatingList}
-                  className="w-full px-3 py-2 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="pl-4 text-base mb-2"
                 />
 
                 <div className="flex gap-2">

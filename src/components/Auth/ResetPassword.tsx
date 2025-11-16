@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import BrandHeader from "../BrandHeader/BrandHeader";
 import { images } from "../../assets";
 import BottomImage from "./BottomImage";
+import Input from "../UI/Input";
 
 export default function ResetPassword() {
   const dispatch = useAppDispatch();
@@ -51,13 +52,12 @@ export default function ResetPassword() {
             </label>
             <div className="relative">
               <Mail className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
-              <input
+              <Input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter email"
               />
             </div>

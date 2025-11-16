@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import Input from "../UI/Input";
 
 interface CreateWorkspaceModalProps {
   onClose: () => void;
@@ -62,7 +63,7 @@ export const CreateWorkspaceModal = ({
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Workspace Name
               </label>
-              <input
+              <Input
                 type="text"
                 value={formData.name}
                 onChange={(e) =>
@@ -70,7 +71,7 @@ export const CreateWorkspaceModal = ({
                 }
                 disabled={loading}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="pl-4 placeholder:text-base"
                 placeholder="My Awesome Workspace"
               />
             </div>
@@ -86,7 +87,7 @@ export const CreateWorkspaceModal = ({
                 }
                 rows={3}
                 disabled={loading}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="What's this workspace about?"
               />
             </div>

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import Input from "../UI/Input";
 
 interface CreateBoardModalProps {
   onClose: () => void;
@@ -83,7 +84,7 @@ export const CreateBoardModal = ({
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Board Name
               </label>
-              <input
+              <Input
                 type="text"
                 value={formData.title}
                 onChange={(e) =>
@@ -91,7 +92,7 @@ export const CreateBoardModal = ({
                 }
                 required
                 disabled={inputsDisabled}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
+                className="pl-4 placeholder:text-base"
                 placeholder="Project Board"
                 aria-disabled={inputsDisabled}
               />
@@ -108,7 +109,7 @@ export const CreateBoardModal = ({
                 }
                 rows={2}
                 disabled={inputsDisabled}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
                 placeholder="What's this board for?"
               />
             </div>

@@ -155,7 +155,7 @@ export const KanbanList = ({
                 placeholder="Enter card title..."
                 autoFocus
                 rows={3}
-                className="w-full px-3 py-2 mb-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 mb-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               <div className="flex gap-2">
                 <button
