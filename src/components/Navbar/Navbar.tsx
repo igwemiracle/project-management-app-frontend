@@ -10,12 +10,12 @@ import { IconButton } from "../UI/IconButton";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
-import AccountFloatingContainer from "./AccountFloatingContainer";
-import UserAvatar from "../Auth/UserAvatar";
+import UserAvatar from "../UserAccount/UserAvatar";
 import { useAppSelector } from "../../store/hooks";
 import CreateMenu from "../Board/CreateMenu";
 import SearchDropdown from "./SearchDropdown";
 import { api } from "../../services/api";
+import AccountFloatingContainer from "../Common/AccountFloatingContainer";
 
 export default function Navbar() {
   const { user } = useAppSelector((state) => state.auth);
@@ -108,7 +108,7 @@ export default function Navbar() {
           </div>
 
           {/* Account Button - Always visible */}
-          <div className="xs:hidden lg:flex">
+          <div className="xs:hidden sm:flex">
             <IconButton
               className="-ml-3 cursor-pointer"
               onClick={() => setShowAccountMenu((prev) => !prev)}

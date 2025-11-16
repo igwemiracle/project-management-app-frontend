@@ -1,5 +1,5 @@
 import { ChevronLeft, X, ChevronDown } from "lucide-react";
-import FloatingContainer from "../FloatingContainer";
+import FloatingContainer from "../Common/FloatingContainer";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useParams } from "react-router-dom";

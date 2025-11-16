@@ -1,11 +1,11 @@
 import { ArrowLeft, LogOut, Users } from "lucide-react";
-import FloatingContainer from "../FloatingContainer";
+import FloatingContainer from "../Common/FloatingContainer";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProfile, logout, logoutUser } from "../../store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useModal } from "../../context/ModalContext";
-import UserAvatar from "../Auth/UserAvatar";
+import UserAvatar from "../UserAccount/UserAvatar";
 import {
   getStoredAccounts,
   removeAccountFromStorage,

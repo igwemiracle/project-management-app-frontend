@@ -1,15 +1,18 @@
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { UserPlus, Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { register, clearError } from "../../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import { images } from "../../assets";
+import BrandHeader from "../BrandHeader/BrandHeader";
+import BottomImage from "./BottomImage";
 
 export const Register = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state) => state.auth);
+  const [showPassword, setShowPassword] = useState(false);
+  const { loading, error } = useAppSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -17,22 +20,19 @@ export const Register = () => {
     fullName: ""
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    dispatch(clearError());
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(clearError());
-    const resultAction = await dispatch(register(formData));
-
-    if (register.fulfilled.match(resultAction)) {
-      toast.success(
-        "Account created! Please check your email to verify before logging in."
-      );
+    try {
+      await dispatch(register(formData)).unwrap();
       setFormData({ username: "", email: "", password: "", fullName: "" });
-    } else if (register.rejected.match(resultAction)) {
-      const errorMessage =
-        typeof resultAction.payload === "string"
-          ? resultAction.payload
-          : "Registration failed.";
-      toast.error(errorMessage);
+      navigate("/go-to-email");
+    } catch (err: any) {
+      console.error("Login failed:", err);
     }
   };
 
@@ -41,124 +41,132 @@ export const Register = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="xs:w-full sm:w-[50%] lg:w-[40%] xl:w-[25%] px-6 md:shadow-up-down md:rounded-xl md:p-9"
-    >
-      <div className="mb-8 text-center">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 200 }}
-          className="inline-flex items-center justify-center xs:size-12 sm:size-[44px] lg:size-[40px] mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-xl"
-        >
-          <UserPlus className="text-white lg:size-6 xs:size-7" />
-        </motion.div>
-        <p className="font-medium sm:font-normal sm:-mt-2 tracking-tight text-center text-gray-800 xs:text-[33px] sm:text-[36px]">
-          Create Account
+    <div className="relative xs:w-[90%] xs:max-w-[300px] xxs:w-[90%] xxs:max-w-[300px] sm:w-[60%] sm:max-w-[300px] md:w-[50%] md:max-w-[350px] lg:w-[60%] lg:max-w-[370px] xl:w-[70%] xl:max-w-[400px]">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="md:shadow-up-down md:rounded-lg md:p-9"
+      >
+        {/* Brand Header */}
+        <BrandHeader />
+        <p className="max-w-md mx-auto text-base font-semibold leading-relaxed text-center text-gray-700">
+          Sign up to continue
         </p>
 
-        <p className="max-w-md mx-auto mt-2 text-sm leading-relaxed text-center text-gray-600 xs:text-base sm:text-lg">
-          Join us and start collaborating
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700">
-            Full Name
-          </label>
-          <div className="relative">
-            <User className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="John Doe"
-            />
+        <form onSubmit={handleSubmit} className="space-y-5 mt-2">
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Full Name
+            </label>
+            <div className="relative">
+              <User className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+              <input
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
+                required
+                className="w-full py-2 pl-10 pr-4 transition border border-gray-300 rounded-lg placeholder:text-sm lg:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="John Doe"
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700">
-            Username
-          </label>
-          <div className="relative">
-            <User className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="johndoe"
-            />
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Username
+            </label>
+            <div className="relative">
+              <User className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+                className="w-full py-2 pl-10 pr-4 transition border border-gray-300 rounded-lg placeholder:text-sm lg:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="johndoe"
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700">
-            Email
-          </label>
-          <div className="relative">
-            <Mail className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="you@example.com"
-            />
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <div className="relative">
+              <Mail className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full py-2 pl-10 pr-4 transition border border-gray-300 rounded-lg placeholder:text-sm lg:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="you@example.com"
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <div className="relative">
-            <Lock className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full py-3 pl-10 pr-4 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="Create a strong password"
-            />
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <div className="relative">
+              <Lock className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+              <input
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                type={showPassword ? "text" : "password"}
+                required
+                className="w-full py-2 pl-10 pr-4 transition border border-gray-300 rounded-lg placeholder:text-sm lg:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute text-sm text-gray-400 transform -translate-y-1/2 right-3 top-1/2 hover:underline focus:outline-none"
+              >
+                {showPassword ? <Eye size={22} /> : <EyeOff size={22} />}
+              </button>
+            </div>
           </div>
-        </div>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="p-3 text-sm text-red-700 border border-red-200 rounded-lg bg-red-50"
+            >
+              {error}
+            </motion.div>
+          )}
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          type="submit"
-          disabled={loading}
-          className="w-full py-3 font-semibold text-white transition rounded-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50"
-        >
-          {loading ? "Creating account..." : "Create Account"}
-        </motion.button>
-      </form>
-
-      <div className="mt-6 text-center">
-        <p className="text-gray-600">
-          Already have an account?{" "}
-          <button
-            onClick={() => navigate("/login")}
-            className="font-semibold text-green-600 transition cursor-pointer hover:text-green-700"
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="submit"
+            disabled={loading}
+            className="w-full py-2 font-semibold text-white transition rounded-lg lg:py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sign in
-          </button>
-        </p>
-      </div>
-    </motion.div>
+            {loading ? "Creating account..." : "Create Account"}
+          </motion.button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-gray-600">
+            Already have an account?{" "}
+            <button
+              onClick={() => navigate("/login")}
+              className="font-semibold text-blue-500 transition cursor-pointer hover:text-blue-700"
+            >
+              Sign in
+            </button>
+          </p>
+        </div>
+      </motion.div>
+      <BottomImage src={images.v1} alt="first verify image" position="left" />
+      <BottomImage src={images.v2} alt="second verify image" position="right" />
+    </div>
   );
 };

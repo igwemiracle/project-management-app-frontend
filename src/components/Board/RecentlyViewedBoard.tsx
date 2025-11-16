@@ -7,7 +7,7 @@ import {
   toggleFavorite
 } from "../../store/slices/boardSlice";
 import { api } from "../../services/api";
-import BoardCard from "../Board/BoardCard";
+import BoardCard from "./BoardCard";
 
 export default function RecentlyViewedBoard() {
   const dispatch = useAppDispatch();

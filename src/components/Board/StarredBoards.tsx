@@ -1,7 +1,7 @@
 import { Star } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useEffect } from "react";
-import BoardCard from "../Board/BoardCard";
+import BoardCard from "./BoardCard";
 import {
   fetchStarredBoards,
   toggleFavorite

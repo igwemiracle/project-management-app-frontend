@@ -1,6 +1,6 @@
 import { WorkspaceList } from "../Workspace/WorkspaceList";
-import RecentlyViewedBoard from "./RecentlyViewedBoard";
-import StarredBoards from "./StarredBoards";
+import RecentlyViewedBoard from "../Board/RecentlyViewedBoard";
+import StarredBoards from "../Board/StarredBoards";
 
 export default function Homepage() {
   return (

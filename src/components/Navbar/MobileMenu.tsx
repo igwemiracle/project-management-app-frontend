@@ -1,9 +1,8 @@
 import { Megaphone, Bell, HelpCircle, Info, LogOut } from "lucide-react";
 import { IconButton } from "../UI/IconButton";
-import UserAvatar from "../Auth/UserAvatar";
+import UserAvatar from "../UserAccount/UserAvatar";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useState } from "react";
-import AccountFloatingContainer from "./AccountFloatingContainer";
 import {
   getStoredAccounts,
   removeAccountFromStorage,
@@ -11,6 +10,7 @@ import {
 } from "../../utils/storage";
 import { getProfile, logout, logoutUser } from "../../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import AccountFloatingContainer from "../Common/AccountFloatingContainer";
 
 interface MobileMenuProps {
   isOpen: boolean;

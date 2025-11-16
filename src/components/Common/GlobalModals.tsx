@@ -1,9 +1,9 @@
-import { useModal } from "../context/ModalContext";
-import { createWorkspace } from "../store/slices/workspaceSlice";
-import { createBoard } from "../store/slices/boardSlice";
-import { CreateWorkspaceModal } from "./Workspace/CreateWorkspaceModal";
-import { CreateBoardModal } from "./Board/CreateBoardModal";
-import { useAppDispatch } from "../store/hooks";
+import { useModal } from "../../context/ModalContext";
+import { createWorkspace } from "../../store/slices/workspaceSlice";
+import { createBoard } from "../../store/slices/boardSlice";
+import { CreateWorkspaceModal } from "../Workspace/CreateWorkspaceModal";
+import { CreateBoardModal } from "../Board/CreateBoardModal";
+import { useAppDispatch } from "../../store/hooks";
 
 export const GlobalModals = () => {
   const dispatch = useAppDispatch();

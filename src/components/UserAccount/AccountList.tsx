@@ -43,7 +43,7 @@ export default function AccountList({
   });
 
   return (
-    <div className="flex flex-col gap-2 bg-white ">
+    <div className="flex flex-col gap-2 bg-white mt-10">
       {sortedAccounts.map((account, index) => {
         const isCurrent = current?.email === account.email;
         const accountId = account._id || account.id || index;

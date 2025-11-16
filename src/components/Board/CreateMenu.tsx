@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import FloatingContainer from "../FloatingContainer";
+import FloatingContainer from "../Common/FloatingContainer";
 import { IconButton } from "../UI/IconButton";
 import { Layout, LayoutTemplate } from "lucide-react";
 import CreateBoardForm from "./CreateBoardForm";

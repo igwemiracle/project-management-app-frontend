@@ -13,21 +13,22 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { BoardList } from "./components/Board/BoardList";
 import { KanbanBoard } from "./components/Board/KanbanBoard";
 import Navbar from "./components/Navbar/Navbar";
-import { VerifyEmail } from "./components/Auth/VerifyEmail";
+import { VerifyEmail } from "./components/Auth/EmailVerified";
 import { Login } from "./components/Auth/Login";
 import { Register } from "./components/Auth/Register";
 import { getProfile } from "./store/slices/authSlice";
 import { ModalProvider } from "./context/ModalContext";
-import { GlobalModals } from "./components/GlobalModals";
+import { GlobalModals } from "./components/Common/GlobalModals";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Homepage from "./components/Homepage/Homepage";
-import { SwitchAccounts } from "./components/Auth/SwitchAccounts";
+import { SwitchAccounts } from "./components/UserAccount/SwitchAccounts";
 import { AuthLayout } from "./components/Auth/AuthLayout";
 import ResetPassword from "./components/Auth/ResetPassword";
 import { NavbarSkeleton } from "./components/SkeletonLoader/NavbarSkeleton";
 import Loader from "./components/UI/Loader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GoToEmail } from "./components/Auth/VerifyEmail";
 
 function AppContent() {
   const dispatch = useAppDispatch();
@@ -46,7 +47,8 @@ function AppContent() {
     location.pathname.startsWith("/register") ||
     location.pathname.startsWith("/verify-email") ||
     location.pathname.startsWith("/switch-accounts") ||
-    location.pathname.startsWith("/reset-password");
+    location.pathname.startsWith("/reset-password") ||
+    location.pathname.startsWith("/go-to-email");
 
   if (!initialized) {
     // ✅ Show different loader depending on route
@@ -103,6 +105,14 @@ function AppContent() {
           element={
             <AuthLayout>
               <ResetPassword />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/go-to-email"
+          element={
+            <AuthLayout>
+              <GoToEmail />
             </AuthLayout>
           }
         />

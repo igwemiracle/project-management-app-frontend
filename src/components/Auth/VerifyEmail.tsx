@@ -1,94 +1,62 @@
-import { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { useAppSelector } from "../../store/hooks";
+import { images } from "../../assets";
+import BrandHeader from "../BrandHeader/BrandHeader";
+import BottomImage from "./BottomImage";
 
-export const VerifyEmail = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const [status, setStatus] = useState<"verifying" | "success" | "error">(
-    "verifying"
-  );
-
-  useEffect(() => {
-    const verifyEmail = async () => {
-      const token = searchParams.get("token");
-      if (!token) {
-        setStatus("error");
-        return;
-      }
-
-      try {
-        interface VerifyEmailResponse {
-          message: string;
-        }
-        const res = await axios.get<VerifyEmailResponse>(
-          `${import.meta.env.VITE_API_URL}/auth/verify-email?token=${token}`
-        );
-
-        if (
-          res.status === 200 &&
-          (res.data.message === "Email verified successfully" ||
-            res.data.message === "Already verified")
-        ) {
-          setStatus("success");
-
-          // ⏳ Delay redirect to login
-          setTimeout(() => navigate("/login"), 3000);
-        } else {
-          setStatus("error");
-        }
-      } catch (err: any) {
-        console.error(err);
-        // ✅ Handle "Already verified" from error response as well
-        if (err.response?.data?.message === "Already verified") {
-          setStatus("success");
-          setTimeout(() => navigate("/login"), 3000);
-        } else {
-          setStatus("error");
-        }
-      }
-    };
-
-    verifyEmail();
-  }, [searchParams, navigate]);
+export const GoToEmail = () => {
+  const { user } = useAppSelector((state) => state.auth);
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-50 via-white to-green-50">
-      <div className="w-full max-w-md p-8 text-center bg-white shadow-lg rounded-2xl">
-        {status === "verifying" && (
-          <>
-            <h2 className="text-xl font-semibold text-gray-800">
-              Verifying your email...
-            </h2>
-            <p className="mt-2 text-gray-500">
-              Please wait while we confirm your email.
-            </p>
-          </>
-        )}
+    <div className="relative xs:w-[90%] xs:max-w-[300px] xxs:w-[90%] xxs:max-w-[300px] sm:w-[60%] sm:max-w-[300px] md:w-[50%] md:max-w-[350px] lg:w-[60%] lg:max-w-[370px] xl:w-[70%] xl:max-w-[400px]">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className=" mx-auto bg-white md:rounded-lg md:shadow-up-down py-8 
+                md:border md:border-gray-100 sm:px-8"
+      >
+        {/* Brand Header */}
+        <BrandHeader />
 
-        {status === "success" && (
-          <>
-            <h2 className="text-xl font-semibold text-green-600">
-              Email Verified!
-            </h2>
-            <p className="mt-2 text-gray-600">
-              Your email has been successfully verified. Redirecting to login...
-            </p>
-          </>
-        )}
+        {/* Body Text */}
+        <p className="text-[#44556f] text-sm xl:text-[15px] leading-relaxed mb-6 font-normal">
+          To complete your registration, we’ve sent a verification link to your
+          email address. Please check your inbox.
+        </p>
 
-        {status === "error" && (
-          <>
-            <h2 className="text-xl font-semibold text-red-600">
-              Verification Failed
-            </h2>
-            <p className="mt-2 text-gray-600">
-              The verification link is invalid or expired. Please request a new
-              one.
-            </p>
-          </>
-        )}
-      </div>
+        {/* Email Display */}
+        <div
+          className="
+      
+      bg-blue-50 text-blue-700 text-sm xl:text-[15px] font-medium px-4 py-3 rounded-lg border border-blue-100 text-center shadow-sm"
+        >
+          {user?.email}
+        </div>
+
+        {/* Action Links */}
+        <div className="flex items-center justify-center gap-3 mt-6 text-sm">
+          <Link
+            to={"/reset-password"}
+            className="text-blue-600 hover:text-blue-800 underline font-medium transition"
+          >
+            Didn't receive an email?
+          </Link>
+
+          <span className="text-gray-300 text-xl leading-none">•</span>
+
+          <Link
+            to={"/register"}
+            className="font-semibold text-blue-600 hover:text-blue-800 transition"
+          >
+            Resend Email
+          </Link>
+        </div>
+
+        <hr className="mt-8 border-gray-200" />
+      </motion.div>
+      <BottomImage src={images.v1} alt="first verify image" position="left" />
+      <BottomImage src={images.v2} alt="second verify image" position="right" />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Workflow, User as UserIcon } from "lucide-react";
+import { User as UserIcon } from "lucide-react";
 import { useAppDispatch } from "../../store/hooks";
 import {
   getProfile,
@@ -17,6 +17,9 @@ import {
   removeAccountFromStorage,
   STORAGE_KEY
 } from "../../utils/storage";
+import BrandHeader from "../BrandHeader/BrandHeader";
+import BottomImage from "../Auth/BottomImage";
+import { images } from "../../assets";
 
 export const SwitchAccounts = () => {
   const dispatch = useAppDispatch();
@@ -98,66 +101,56 @@ export const SwitchAccounts = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="xs:w-full sm:w-[50%] lg:w-[40%] xl:w-[25%] px-6 md:shadow-up-down md:rounded-xl md:p-9"
-    >
-      {/* Header */}
-      <div className="mb-8 text-center">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 200 }}
-          className="flex items-start justify-center gap-3"
-        >
-          <div className="inline-flex items-center justify-center w-12 h-12 mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl ">
-            <Workflow className="text-white w-7 h-7" />
-          </div>
-          <h2 className="mt-1 text-3xl font-bold text-gray-800">Planora</h2>
-        </motion.div>
-        <p className="mt-2 font-bold text-gray-600">
-          Choose or add another account
-        </p>
-      </div>
-
-      {/* Account List */}
-      <AccountList
-        accounts={accounts}
-        currentAccount={currentAccount}
-        onSelectAccount={handleSelectAccount}
-        onRemoveAccount={handleDeleteAccount}
-      />
-
-      {/* Add account */}
-      <div
-        onClick={handleAddAccount}
-        className="flex items-center gap-3 px-3 border-b cursor-pointer py-7 border-slate-200 hover:bg-gray-100"
+    <div className="relative xs:w-[90%] xs:max-w-[300px] xxs:w-[90%] xxs:max-w-[300px] sm:w-[60%] sm:max-w-[300px] md:w-[50%] md:max-w-[350px] lg:w-[60%] lg:max-w-[370px] xl:w-[70%] xl:max-w-[400px]">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="md:shadow-up-down md:rounded-sm md:p-9"
       >
-        <UserIcon size={26} />
-        <p className="text-gray-600">Add another account</p>
-      </div>
+        {/* Brand Header */}
+        <BrandHeader />
+        {/* Account List */}
+        <AccountList
+          accounts={accounts}
+          currentAccount={currentAccount}
+          onSelectAccount={handleSelectAccount}
+          onRemoveAccount={handleDeleteAccount}
+        />
 
-      {/* Footer link */}
-      <div className="text-center my-7">
-        {accounts.length <= 1 ? (
-          <p
-            onClick={handleLogout}
-            className="text-blue-600 text-[15px] hover:underline cursor-pointer"
-          >
-            Log out
-          </p>
-        ) : (
-          <p
-            onClick={handleRemoveAll}
-            className="text-blue-600 text-[15px] hover:underline cursor-pointer"
-          >
-            Remove all accounts
-          </p>
-        )}
-      </div>
+        {/* Add account */}
+        <div
+          onClick={handleAddAccount}
+          className="flex items-center gap-3 px-3 border-b cursor-pointer py-7 border-slate-200 hover:bg-slate-100"
+        >
+          <UserIcon size={26} />
+          <p className="text-gray-600">Add another account</p>
+        </div>
 
-      <hr className="border-gray-300" />
-    </motion.div>
+        {/* Footer link */}
+        <div className="text-center my-7">
+          {accounts.length <= 1 ? (
+            <p
+              onClick={handleLogout}
+              className="text-blue-600 text-[15px] hover:underline cursor-pointer"
+            >
+              Log out
+            </p>
+          ) : (
+            <p
+              onClick={handleRemoveAll}
+              className="text-blue-600 text-[15px] hover:underline cursor-pointer"
+            >
+              Remove all accounts
+            </p>
+          )}
+        </div>
+
+        <hr className="border-gray-300" />
+      </motion.div>
+
+      {/* Bottom image */}
+      <BottomImage src={images.v1} alt="first verify image" position="left" />
+      <BottomImage src={images.v2} alt="second verify image" position="right" />
+    </div>
   );
 };
