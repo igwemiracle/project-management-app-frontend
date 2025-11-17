@@ -13,12 +13,16 @@ export const BoardList = () => {
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const dispatch = useAppDispatch();
   const { boards, loading } = useAppSelector((state) => state.boards);
-  const { currentWorkspace } = useAppSelector((state) => state.workspaces);
+  const { workspaces } = useAppSelector((state) => state.workspaces);
   const navigate = useNavigate();
   const { openModal } = useModal();
 
   // ✅ Local state for immediate star toggle feedback
   const [localBoards, setLocalBoards] = useState(boards);
+
+  const activeWorkspace = workspaces?.find(
+    (w) => w._id?.toString() === workspaceId?.toString()
+  );
 
   // Sync localBoards whenever Redux boards change
   useEffect(() => {
@@ -58,41 +62,42 @@ export const BoardList = () => {
   };
 
   return (
-    <div className="min-h-screen px-3 py-4 mt-12 xs:px-4 xs:py-6 sm:p-6 md:p-8 bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="w-full mx-auto max-w-7xl">
-        {/* Header Section */}
-        <div className="flex flex-col items-start gap-3 mb-6 xs:gap-4 xs:mb-8 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center w-full gap-3 mt-12 sm:w-auto">
-            <button
-              onClick={handleOnBack}
-              className="p-2 transition rounded-lg hover:bg-white"
-            >
-              <ArrowLeft className="w-5 h-5 text-gray-700 xs:w-6 xs:h-6" />
-            </button>
-
-            <div className="flex-1 min-w-0">
-              <h1 className="mb-1 text-2xl font-bold leading-tight text-gray-900 xs:text-3xl sm:text-4xl">
-                {currentWorkspace?.name}
-              </h1>
-              <p className="text-sm text-muted-foreground xs:text-base">
-                Manage your boards and projects
-              </p>
-            </div>
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => openModal("board", { workspaceId })}
-            className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm text-white transition rounded-lg bg-blue-600 hover:bg-blue-700 xs:w-auto xs:px-5 xs:py-2.5 xs:text-base sm:px-6 sm:py-3"
+    // <div className="min-h-screen px-3 py-4 sm:mt-10 xs:px-4 xs:py-6 sm:p-6 md:p-8 bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen py-4 bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Header Section */}
+      <div className="flex xs:flex-col sm:flex-row items-start justify-between mt-6 w-auto px-3 py-4  bg-white">
+        <div className="flex items-center justify-center xs:gap-1 gap-4">
+          <button
+            onClick={handleOnBack}
+            className="p-2 transition rounded-lg hover:bg-gray-100"
           >
-            <Plus className="w-4 h-4 xs:w-5 xs:h-5" />
-            New Board
-          </motion.button>
+            <ArrowLeft className="w-6 h-6 text-gray-700" />
+          </button>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg font-semibold text-gray-900 lg:text-2xl">
+              {activeWorkspace?.name}
+            </h1>
+          </div>
         </div>
+      </div>
 
+      <div className="flex justify-between my-6 w-[95%] max-w-7xl mx-auto">
+        <div></div>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => openModal("board", { workspaceId })}
+          // className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm text-white transition rounded-lg bg-blue-600 hover:bg-blue-700 xs:w-auto xs:px-5 xs:py-2.5 xs:text-base sm:px-6 sm:py-3"
+          className="flex items-center justify-center gap-2 px-4 py-2 text-sm text-white transition rounded-lg bg-blue-600 hover:bg-blue-700 w-auto  float-right"
+        >
+          <Plus className="w-4 h-4 xs:w-5 xs:h-5" />
+          New Board
+        </motion.button>
+      </div>
+
+      <div className="w-[95%] mx-auto max-w-7xl">
         {loading ? (
-          <div className="grid xl:grid-cols-4 xl:gap-x-1 lg:grid-cols-3 xs:grid-cols-1 xs:gap-y-3 xxs:grid-cols-2 sm:grid-cols-2 xs:gap-2">
+          <div className=" grid xl:grid-cols-4 xl:gap-x-1 lg:grid-cols-3 xs:grid-cols-1 xs:gap-y-3 xxs:grid-cols-2 sm:grid-cols-2 xs:gap-2">
             {Array.from({ length: 4 }).map((_, i) => (
               <CardSkeleton key={i} />
             ))}
