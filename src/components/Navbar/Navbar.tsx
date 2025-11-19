@@ -6,7 +6,6 @@ import {
   WorkflowIcon,
   MoreHorizontal
 } from "lucide-react";
-import { IconButton } from "../UI/IconButton";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
@@ -14,6 +13,7 @@ import UserAvatar from "../UserAccount/UserAvatar";
 import { useAppSelector } from "../../store/hooks";
 import CreateMenu from "../Board/CreateMenu";
 import SearchDropdown from "./SearchDropdown";
+import { IconButton } from "../UI/IconButton";
 import { api } from "../../services/api";
 import AccountFloatingContainer from "../Common/AccountFloatingContainer";
 
