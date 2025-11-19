@@ -116,7 +116,7 @@ export default function CreateBoardForm({
           <label className="block mb-1 text-sm text-gray-800">
             Board title
           </label>
-          <input
+          <Input
             type="text"
             required
             value={formData.title}
@@ -124,9 +124,7 @@ export default function CreateBoardForm({
               setFormData({ ...formData, title: e.target.value })
             }
             placeholder="My Awesome Board"
-            className="pl-4 py-2 text-[15px] text-gray-800 border border-gray-300 rounded-md 
-            focus:outline-none focus:ring-2 focus:ring-blue-500
-            focus:border-transparent"
+            className="pl-4 py-2 lg:py-[6px] text-[15px] text-gray-800 border border-gray-300 rounded-md"
           />
         </div>
 
