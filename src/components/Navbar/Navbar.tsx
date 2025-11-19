@@ -55,7 +55,7 @@ export default function Navbar() {
             <input
               type="text"
               placeholder="Search"
-              className="w-full text-sm text-gray-300 placeholder-gray-400 bg-transparent focus:outline-none"
+              className="w-full text-sm text-gray-900 placeholder-gray-400 bg-transparent focus:outline-none"
             />
           </div>
 
